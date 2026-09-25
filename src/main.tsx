@@ -2,6 +2,7 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { App } from './App';
 import './styles.css';
+import { initTwaSystemUi } from './utils/twaSystemUi';
 
 const root = document.getElementById('root');
 if (!root) throw new Error('Root element not found');
@@ -11,6 +12,8 @@ createRoot(root).render(
     <App />
   </StrictMode>,
 );
+
+initTwaSystemUi();
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
