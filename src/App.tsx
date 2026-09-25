@@ -6,6 +6,7 @@ import type { HelpKey, Screen, SummaryData } from './domain/types';
 import { useRestTimer } from './hooks/useRestTimer';
 import { useWakeLock } from './hooks/useWakeLock';
 import { formatClock } from './utils/format';
+import { parseYouTubeUrl, type YouTubeVideo } from './utils/youtube';
 import { Confetti } from './components/Confetti';
 import { CycleScreen } from './components/CycleScreen';
 import { DayScreen } from './components/DayScreen';
@@ -37,6 +38,7 @@ function WorkoutApp() {
   const [helpKey, setHelpKey] = useState<HelpKey | null>(null);
   const [weightContext, setWeightContext] = useState<WeightContext | null>(null);
   const [summary, setSummary] = useState<SummaryData | null>(null);
+  const [video, setVideo] = useState<YouTubeVideo | null>(null);
   const [milestoneOpen, setMilestoneOpen] = useState(false);
   const [confettiTrigger, setConfettiTrigger] = useState(0);
   const [installPrompt, setInstallPrompt] = useState<InstallPromptEvent | null>(null);
@@ -114,6 +116,16 @@ function WorkoutApp() {
     setHelpKey(key);
   }, []);
 
+  const openVideo = useCallback((url: string) => {
+    const parsed = parseYouTubeUrl(url);
+    if (!parsed) {
+      showToast('Не удалось открыть ссылку на видео');
+      return;
+    }
+    setVideo(parsed);
+  }, [showToast]);
+  const closeVideo = useCallback(() => setVideo(null), []);
+
   const openWeight = useCallback((exercise: number, set: number, weight: number | null) => {
     setHelpKey(null);
     setWeightContext({ day: currentDay, exercise, set, weight });
@@ -175,11 +187,11 @@ function WorkoutApp() {
       <HomeScreen visible={screen === 'home'} onOpenDay={openDay} onOpenCycle={onOpenCycle} onToast={showToast} onCelebrate={celebrate} />
       <CycleScreen visible={screen === 'cycle'} onOpenDay={openDay} onToast={showToast} />
       <ProfileScreen visible={screen === 'profile'} canInstall={Boolean(installPrompt)} onInstall={onInstall} onToast={showToast} />
-      <DayScreen visible={screen === 'day'} day={currentDay} onBack={onBack} onDayChange={changeDay} onOpenHelp={openHelp} onOpenWeight={openWeight} onStartRest={onStartRest} onRequestWakeLock={onRequestWakeLock} />
+      <DayScreen visible={screen === 'day'} day={currentDay} onBack={onBack} onDayChange={changeDay} onOpenHelp={openHelp} onOpenWeight={openWeight} onOpenVideo={openVideo} onStartRest={onStartRest} onRequestWakeLock={onRequestWakeLock} />
       <BottomNav screen={screen} onNavigate={navigate} />
       <SessionBar visible={screen === 'day'} done={stats.done} total={stats.total} tonnage={tonnage} finished={finished} onFinish={completeDay} onOpenHelp={() => openHelp('tonnage')} />
       <RestTimer timer={restTimer} onOpenHelp={() => openHelp('rest')} />
-      <Overlays scrimOpen={anySheetOpen} onClose={closeSheets} weightContext={weightContext} onSaveWeight={saveWeight} helpKey={helpKey} summary={summary} milestoneOpen={milestoneOpen} onCloseMilestone={() => setMilestoneOpen(false)} onHomeFromSummary={returnHomeFromSummary} onToast={showToast} />
+      <Overlays scrimOpen={anySheetOpen} onClose={closeSheets} weightContext={weightContext} onSaveWeight={saveWeight} helpKey={helpKey} summary={summary} video={video} onCloseVideo={closeVideo} milestoneOpen={milestoneOpen} onCloseMilestone={() => setMilestoneOpen(false)} onHomeFromSummary={returnHomeFromSummary} onToast={showToast} />
       <Confetti trigger={confettiTrigger} />
       <Toast message={toast} />
     </>
