@@ -3,7 +3,7 @@
   "name": "МЕЗО",
   "launcherName": "МЕЗО",
   "host": "jumpipgo.github.io",
-  "startUrl": "https://jumpipgo.github.io/TREN/",
+  "startUrl": "/TREN/",
   "iconUrl": "https://jumpipgo.github.io/TREN/icons/icon-512.png",
   "maskableIconUrl": "https://jumpipgo.github.io/TREN/icons/icon-512.png",
   "navigationColor": "#000000",
