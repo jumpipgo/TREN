@@ -59,7 +59,7 @@ jobs:
         env:
           BUBBLEWRAP_KEYSTORE_PASSWORD: ${{ secrets.TWA_KEYSTORE_PASSWORD }}
           BUBBLEWRAP_KEY_PASSWORD: ${{ secrets.TWA_KEY_PASSWORD }}
-        run: bubblewrap build --skipPwaValidation --manifest=.
+        run: bubblewrap build --skipPwaValidation --manifest=twa-manifest.json
 
       - name: Package APK and Digital Asset Links
         env:
