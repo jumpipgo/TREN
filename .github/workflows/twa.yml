@@ -55,6 +55,13 @@ jobs:
       - name: Generate TWA project
         run: bubblewrap update --manifest=twa-manifest.json --skipVersionUpgrade
 
+      - name: Upload generated TWA source
+        uses: actions/upload-artifact@v4
+        with:
+          name: meso-twa-source
+          path: android
+          retention-days: 1
+
       - name: Build signed APK
         env:
           BUBBLEWRAP_KEYSTORE_PASSWORD: ${{ secrets.TWA_KEYSTORE_PASSWORD }}
