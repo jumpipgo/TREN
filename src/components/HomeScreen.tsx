@@ -11,12 +11,6 @@ interface HomeScreenProps {
   onOpenCycle: () => void;
   onToast: (message: string) => void;
   onCelebrate: () => void;
-  isFullscreen: boolean;
-  onPromptFullscreen: () => void;
-  showPwaTip: boolean;
-  canInstall: boolean;
-  onInstall: () => void;
-  onDismissTip: () => void;
 }
 
 function ringPath(start: number, end: number): string {
@@ -45,7 +39,7 @@ function ProgressRing({ state, currentDay }: { state: ReturnType<typeof useWorko
   return <svg viewBox="0 0 180 180">{paths}</svg>;
 }
 
-export function HomeScreen({ visible, onOpenDay, onOpenCycle, onToast, onCelebrate, isFullscreen, onPromptFullscreen, showPwaTip, canInstall, onInstall, onDismissTip }: HomeScreenProps) {
+export function HomeScreen({ visible, onOpenDay, onOpenCycle, onToast, onCelebrate }: HomeScreenProps) {
   const { state, setTheme } = useWorkout();
   const currentDay = nextDay(state);
   const activeDay = currentDay ?? 1;
@@ -107,16 +101,6 @@ export function HomeScreen({ visible, onOpenDay, onOpenCycle, onToast, onCelebra
           </button>
         </div>
       </header>
-      {showPwaTip && (
-        <aside className="home-prompt" aria-label="Полноэкранный режим">
-          <div className="home-prompt-copy"><span className="label">МЕЗО на весь экран</span><p>Скрыть часы и заряд, чтобы сосредоточиться на тренировке.</p></div>
-          <div className="home-prompt-actions">
-            <button className="home-prompt-main" onClick={onPromptFullscreen}>{isFullscreen ? 'Выйти' : 'Развернуть'}</button>
-            {canInstall && <button className="home-prompt-install" onClick={onInstall}>Установить</button>}
-            <button className="home-prompt-close" onClick={onDismissTip} aria-label="Закрыть предложение">×</button>
-          </div>
-        </aside>
-      )}
       <div id="homeBody">
         <section className="hero">
           <div className="ring"><ProgressRing state={state} currentDay={currentDay} /> <div className="ring-c">{center}</div></div>

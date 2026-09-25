@@ -5,7 +5,6 @@ import { dayReps, dayStats, dayTonnage, nextDay, progressionExercises } from './
 import type { HelpKey, Screen, SummaryData } from './domain/types';
 import { useRestTimer } from './hooks/useRestTimer';
 import { useWakeLock } from './hooks/useWakeLock';
-import { useFullscreen } from './hooks/useFullscreen';
 import { formatClock } from './utils/format';
 import { Confetti } from './components/Confetti';
 import { CycleScreen } from './components/CycleScreen';
@@ -41,10 +40,8 @@ function WorkoutApp() {
   const [milestoneOpen, setMilestoneOpen] = useState(false);
   const [confettiTrigger, setConfettiTrigger] = useState(0);
   const [installPrompt, setInstallPrompt] = useState<InstallPromptEvent | null>(null);
-  const [homeTipDismissed, setHomeTipDismissed] = useState(false);
   const restTimer = useRestTimer();
   const requestWakeLock = useWakeLock();
-  const fullscreen = useFullscreen();
 
   useEffect(() => {
     document.body.classList.toggle('on-day', screen === 'day');
@@ -165,17 +162,6 @@ function WorkoutApp() {
     await installPrompt.userChoice;
     setInstallPrompt(null);
   }, [installPrompt, showToast]);
-  const dismissHomeTip = useCallback(() => {
-    setHomeTipDismissed(true);
-  }, []);
-  const installFromPrompt = useCallback(async () => {
-    await onInstall();
-    dismissHomeTip();
-  }, [dismissHomeTip, onInstall]);
-  const openFullscreenFromPrompt = useCallback(() => {
-    void fullscreen.toggle();
-    dismissHomeTip();
-  }, [dismissHomeTip, fullscreen.toggle]);
   const onStartRest = useCallback((seconds: number) => restTimer.start(seconds), [restTimer.start]);
   const onRequestWakeLock = useCallback(() => { void requestWakeLock(); }, [requestWakeLock]);
 
@@ -186,7 +172,7 @@ function WorkoutApp() {
 
   return (
     <>
-      <HomeScreen visible={screen === 'home'} onOpenDay={openDay} onOpenCycle={onOpenCycle} onToast={showToast} onCelebrate={celebrate} isFullscreen={fullscreen.isFullscreen} onPromptFullscreen={openFullscreenFromPrompt} showPwaTip={screen === 'home' && !homeTipDismissed} canInstall={Boolean(installPrompt)} onInstall={installFromPrompt} onDismissTip={dismissHomeTip} />
+      <HomeScreen visible={screen === 'home'} onOpenDay={openDay} onOpenCycle={onOpenCycle} onToast={showToast} onCelebrate={celebrate} />
       <CycleScreen visible={screen === 'cycle'} onOpenDay={openDay} onToast={showToast} />
       <ProfileScreen visible={screen === 'profile'} canInstall={Boolean(installPrompt)} onInstall={onInstall} onToast={showToast} />
       <DayScreen visible={screen === 'day'} day={currentDay} onBack={onBack} onDayChange={changeDay} onOpenHelp={openHelp} onOpenWeight={openWeight} onStartRest={onStartRest} onRequestWakeLock={onRequestWakeLock} />
