@@ -10,10 +10,16 @@ import { Confetti } from './components/Confetti';
 import { CycleScreen } from './components/CycleScreen';
 import { DayScreen } from './components/DayScreen';
 import { HomeScreen } from './components/HomeScreen';
+import { ProfileScreen } from './components/ProfileScreen';
 import { BottomNav, SessionBar } from './components/Navigation';
 import { Overlays, type WeightContext } from './components/Overlays';
 import { RestTimer } from './components/RestTimer';
 import { Toast } from './components/Sheet';
+
+interface InstallPromptEvent extends Event {
+  prompt: () => Promise<void>;
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }>;
+}
 
 export function App() {
   return (
@@ -33,6 +39,7 @@ function WorkoutApp() {
   const [summary, setSummary] = useState<SummaryData | null>(null);
   const [milestoneOpen, setMilestoneOpen] = useState(false);
   const [confettiTrigger, setConfettiTrigger] = useState(0);
+  const [installPrompt, setInstallPrompt] = useState<InstallPromptEvent | null>(null);
   const restTimer = useRestTimer();
   const requestWakeLock = useWakeLock();
 
@@ -46,6 +53,20 @@ function WorkoutApp() {
     const timer = window.setTimeout(() => setToast('Повреждённый журнал был восстановлен'), 600);
     return () => window.clearTimeout(timer);
   }, [recovered]);
+
+  useEffect(() => {
+    const onBeforeInstall = (event: Event) => {
+      event.preventDefault();
+      setInstallPrompt(event as InstallPromptEvent);
+    };
+    const onInstalled = () => setInstallPrompt(null);
+    window.addEventListener('beforeinstallprompt', onBeforeInstall);
+    window.addEventListener('appinstalled', onInstalled);
+    return () => {
+      window.removeEventListener('beforeinstallprompt', onBeforeInstall);
+      window.removeEventListener('appinstalled', onInstalled);
+    };
+  }, []);
 
   useEffect(() => {
     if (!toast) return;
@@ -132,6 +153,15 @@ function WorkoutApp() {
 
   const onOpenCycle = useCallback(() => setScreen('cycle'), []);
   const onBack = useCallback(() => setScreen('home'), []);
+  const onInstall = useCallback(async () => {
+    if (!installPrompt) {
+      showToast('Открой меню Chrome → Установить приложение');
+      return;
+    }
+    await installPrompt.prompt();
+    await installPrompt.userChoice;
+    setInstallPrompt(null);
+  }, [installPrompt, showToast]);
   const onStartRest = useCallback((seconds: number) => restTimer.start(seconds), [restTimer.start]);
   const onRequestWakeLock = useCallback(() => { void requestWakeLock(); }, [requestWakeLock]);
 
@@ -144,6 +174,7 @@ function WorkoutApp() {
     <>
       <HomeScreen visible={screen === 'home'} onOpenDay={openDay} onOpenCycle={onOpenCycle} onToast={showToast} onCelebrate={celebrate} />
       <CycleScreen visible={screen === 'cycle'} onOpenDay={openDay} onToast={showToast} />
+      <ProfileScreen visible={screen === 'profile'} canInstall={Boolean(installPrompt)} onInstall={onInstall} onToast={showToast} />
       <DayScreen visible={screen === 'day'} day={currentDay} onBack={onBack} onDayChange={changeDay} onOpenHelp={openHelp} onOpenWeight={openWeight} onStartRest={onStartRest} onRequestWakeLock={onRequestWakeLock} />
       <BottomNav screen={screen} onNavigate={navigate} />
       <SessionBar visible={screen === 'day'} done={stats.done} total={stats.total} tonnage={tonnage} finished={finished} onFinish={completeDay} onOpenHelp={() => openHelp('tonnage')} />

@@ -25,6 +25,7 @@ interface WorkoutContextValue {
   ) => void;
   finishDay: (day: number) => void;
   resetDays: () => void;
+  replaceState: (state: AppState) => void;
   setTheme: (theme: Theme) => void;
 }
 
@@ -61,11 +62,12 @@ export function WorkoutProvider({ children }: { children: ReactNode }) {
     dispatch({ type: 'finish-day', day, at: Date.now() });
   }, []);
   const resetDays = useCallback(() => dispatch({ type: 'reset-days' }), []);
+  const replaceState = useCallback((nextState: AppState) => dispatch({ type: 'replace-state', state: nextState }), []);
   const setTheme = useCallback((theme: Theme) => dispatch({ type: 'set-theme', theme }), []);
 
   const value = useMemo(
-    () => ({ state, recovered: initial.recovered, setWeight, setReps, toggleSet, finishDay, resetDays, setTheme }),
-    [state, setWeight, setReps, toggleSet, finishDay, resetDays, setTheme],
+    () => ({ state, recovered: initial.recovered, setWeight, setReps, toggleSet, finishDay, resetDays, replaceState, setTheme }),
+    [state, setWeight, setReps, toggleSet, finishDay, resetDays, replaceState, setTheme],
   );
 
   return <WorkoutContext.Provider value={value}>{children}</WorkoutContext.Provider>;

@@ -1,5 +1,5 @@
 import type { Screen } from '../domain/types';
-import { CycleIcon, HomeIcon, WorkoutIcon } from './Icons';
+import { CycleIcon, HomeIcon, ProfileIcon } from './Icons';
 
 interface BottomNavProps {
   screen: Screen;
@@ -11,7 +11,7 @@ export function BottomNav({ screen, onNavigate }: BottomNavProps) {
     <nav id="nav" aria-label="Разделы">
       <button className={`nav-btn ${screen === 'home' ? 'on' : ''}`} data-s="home" onClick={() => onNavigate('home')}><HomeIcon /><small>Сегодня</small></button>
       <button className={`nav-btn ${screen === 'cycle' ? 'on' : ''}`} data-s="cycle" onClick={() => onNavigate('cycle')}><CycleIcon /><small>Цикл</small></button>
-      <button className={`nav-btn ${screen === 'day' ? 'on' : ''}`} data-s="day" onClick={() => onNavigate('day')}><WorkoutIcon /><small>Тренировка</small></button>
+      <button className={`nav-btn ${screen === 'profile' ? 'on' : ''}`} data-s="profile" onClick={() => onNavigate('profile')}><ProfileIcon /><small>Профиль</small></button>
     </nav>
   );
 }

@@ -14,7 +14,7 @@ export interface TrainingDay {
 }
 
 export type Theme = 'dark' | 'light';
-export type Screen = 'home' | 'cycle' | 'day';
+export type Screen = 'home' | 'cycle' | 'day' | 'profile';
 
 export interface SetRecord {
   done: boolean;

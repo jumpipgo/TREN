@@ -75,6 +75,7 @@ export type StateAction =
     }
   | { type: 'finish-day'; day: number; at: number }
   | { type: 'reset-days' }
+  | { type: 'replace-state'; state: AppState }
   | { type: 'set-theme'; theme: Theme };
 
 function updateSet(
@@ -140,6 +141,8 @@ export function workoutReducer(state: AppState, action: StateAction): AppState {
     }
     case 'reset-days':
       return { ...state, days: {} };
+    case 'replace-state':
+      return action.state;
     case 'set-theme':
       return { ...state, theme: action.theme };
   }

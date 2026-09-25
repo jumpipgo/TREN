@@ -26,6 +26,10 @@ export function WorkoutIcon({ size = 19 }: IconProps) {
   return <svg {...base(size)}><path d="M2.5 12h2.5M19 12h2.5"/><rect x="5" y="8.2" width="2.6" height="7.6" rx="1.1"/><rect x="16.4" y="8.2" width="2.6" height="7.6" rx="1.1"/><path d="M7.6 12h8.8"/></svg>;
 }
 
+export function ProfileIcon({ size = 19 }: IconProps) {
+  return <svg {...base(size)}><circle cx="12" cy="8" r="3.2"/><path d="M5 20c.7-3.5 3.1-5.2 7-5.2s6.3 1.7 7 5.2"/></svg>;
+}
+
 export function CheckIcon({ size = 13 }: IconProps) {
   return <svg {...base(size)} strokeWidth={3.2}><path d="M4 12.5l5 5L20 6.5"/></svg>;
 }
