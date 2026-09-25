@@ -41,7 +41,8 @@
    БАЗА
    ============================================================ */
 *{box-sizing:border-box;margin:0;padding:0}
-html{-webkit-text-size-adjust:100%}
+html{-webkit-text-size-adjust:100%;min-height:100%;background:var(--bg)}
+#root{min-height:100dvh;isolation:isolate}
 body{
   background:
     radial-gradient(circle at 50% -10%,color-mix(in srgb,var(--lime) 7%,transparent),transparent 34rem),
@@ -624,9 +625,13 @@ body.on-day #toast{top:calc(78px + env(safe-area-inset-top))}
 .cf{position:fixed;top:-14px;z-index:90;pointer-events:none;animation:cf-fall linear forwards}
 @keyframes cf-fall{to{transform:translateY(112vh) rotate(680deg);opacity:.15}}
 
-/* ============================================================
-   АДАПТИВ / МОУШН / ПЕЧАТЬ
-   ============================================================ */
+@media(max-height:650px){
+  .hero{padding-top:12px;padding-bottom:10px}
+  .ring{width:164px}
+  .ring-c .rv{font-size:46px}
+  .ring-c .rs{font-size:10px}
+  .today{padding-top:18px;padding-bottom:16px}
+}
 @media(max-width:380px){
   .nav-btn{min-width:58px}
   .sb-l{min-width:94px;padding-left:8px;padding-right:8px}
