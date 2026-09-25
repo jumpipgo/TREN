@@ -318,7 +318,7 @@ details.blk[open] .chev{transform:rotate(90deg)}
 }
 .ex.done-card .ex-n{background:var(--lime);color:var(--lime-ink);border-color:var(--lime)}
 .ex-muscle{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;flex:0 0 auto;margin-top:1px;color:var(--mc);background:color-mix(in srgb,var(--mc) 11%,var(--surface));border:1px solid color-mix(in srgb,var(--mc) 28%,var(--line-soft));transition:transform .15s,background .2s,border-color .2s}
-.ex-muscle svg{width:18px;height:18px}
+.muscle-asset{display:block;background:var(--mc);-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:center;mask-position:center;-webkit-mask-size:contain;mask-size:contain}
 .ex-muscle:hover{background:color-mix(in srgb,var(--mc) 18%,var(--surface));border-color:var(--mc)}
 .ex-name{min-width:0;overflow-wrap:anywhere;font:600 17px/1.3 var(--font-body);color:var(--text);flex:1;display:flex;gap:9px;align-items:flex-start;letter-spacing:-.01em}
 .ex-name .ex-label{min-width:0;overflow-wrap:anywhere}

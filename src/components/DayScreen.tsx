@@ -207,7 +207,7 @@ export function DayScreen({
               <div className="ex-head" onClick={() => cardDone && toggleCard(exerciseIndex)} role={cardDone ? 'button' : undefined} tabIndex={cardDone ? 0 : undefined}>
                 <div className="ex-top">
                   <span className="ex-n">{exerciseIndex + 1}</span>
-                  <span className="ex-muscle" style={{ '--mc': target.color } as CSSProperties} title={`Цель: ${target.label}`} aria-label={`Цель: ${target.label}`}><MuscleIcon paths={target.paths} /></span>
+                  <span className="ex-muscle" style={{ '--mc': target.color } as CSSProperties} title={`Цель: ${target.label}`} aria-label={`Цель: ${target.label}`}><MuscleIcon asset={target.asset} /></span>
                   <a className="ex-name" href={exercise.url} target="_blank" rel="noopener" onClick={(event) => event.stopPropagation()}><span className="ex-label">{exercise.name}</span><span className="play"><PlayIcon /></span></a>
                 </div>
                 <div className="ex-meta">

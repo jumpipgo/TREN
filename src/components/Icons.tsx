@@ -56,6 +56,6 @@ export function PauseIcon({ paused = false }: { paused?: boolean }) {
     : <svg width="11" height="11" viewBox="0 0 12 12" fill="currentColor"><rect x="2" y="1.5" width="2.6" height="9" rx="1"/><rect x="7.4" y="1.5" width="2.6" height="9" rx="1"/></svg>;
 }
 
-export function MuscleIcon({ paths, size = 18 }: { paths: string[]; size?: number }) {
-  return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths.map((path) => <path key={path} d={path}/>)}</svg>;
+export function MuscleIcon({ asset, size = 18 }: { asset: string; size?: number }) {
+  return <span className="muscle-asset" style={{ width: size, height: size, WebkitMaskImage: `url(${asset})`, maskImage: `url(${asset})` }} aria-hidden="true" />;
 }
