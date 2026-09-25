@@ -11,7 +11,7 @@
   "themeColor": "#000000",
   "themeColorDark": "#000000",
   "backgroundColor": "#000000",
-  "display": "fullscreen-sticky",
+  "display": "standalone",
   "orientation": "portrait",
   "enableNotifications": false,
   "enableSiteSettingsShortcut": false,
