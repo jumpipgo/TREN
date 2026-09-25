@@ -38,6 +38,11 @@ jobs:
       - name: Install Bubblewrap
         run: npm install --global @bubblewrap/cli@1.25.0
 
+      - name: Configure Bubblewrap
+        run: |
+          mkdir -p "$HOME/.bubblewrap"
+          printf '{"jdkPath":"%s","androidSdkPath":"%s"}\n' "$JAVA_HOME" "$ANDROID_SDK_ROOT" > "$HOME/.bubblewrap/config.json"
+
       - name: Restore signing key
         env:
           TWA_KEYSTORE_BASE64: ${{ secrets.TWA_KEYSTORE_BASE64 }}
