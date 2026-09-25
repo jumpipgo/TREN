@@ -117,8 +117,10 @@ body.on-day #nav{transform:translateX(-50%) translateY(130px);opacity:0;pointer-
 /* ============================================================
    HOME — кольцо цикла + «Сегодня»
    ============================================================ */
-.hero{display:flex;flex-direction:column;align-items:center;padding:32px 20px 14px}
-.ring{position:relative;width:min(224px,100%);height:auto;aspect-ratio:1;filter:drop-shadow(0 12px 24px color-mix(in srgb,var(--lime) 8%,transparent))}
+.hero{display:flex;flex-direction:column;align-items:center;width:calc(100% - 32px);max-width:720px;margin:14px auto 0;padding:18px 16px 20px;border:1px solid var(--line-soft);border-radius:24px;background:linear-gradient(145deg,color-mix(in srgb,var(--surface) 94%,var(--lime) 6%),var(--surface));box-shadow:var(--shadow)}
+.overview-top{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.overview-week{color:var(--lime);font:800 11px var(--font-body);letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+.ring{position:relative;width:min(204px,100%);height:auto;aspect-ratio:1;margin-top:8px;filter:drop-shadow(0 12px 24px color-mix(in srgb,var(--lime) 8%,transparent))}
 .ring::before{content:'';position:absolute;inset:22px;border:1px solid var(--line-soft);border-radius:50%;background:color-mix(in srgb,var(--surface) 52%,transparent)}
 .ring svg{width:100%;height:100%;display:block;position:relative}
 .ring-c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;z-index:1}
@@ -137,11 +139,12 @@ body.on-day #nav{transform:translateX(-50%) translateY(130px);opacity:0;pointer-
 .seg.cur{stroke:var(--lime);opacity:.55;stroke-width:12;animation:seg-pulse 2.2s ease-in-out infinite}
 @keyframes seg-pulse{50%{opacity:.95;stroke-width:13}}
 
-.today{padding:24px 20px 10px;max-width:560px;margin:0 auto;width:100%}
-.t-title{font:700 28px/1.15 var(--font-display);letter-spacing:-.03em;margin:10px 0 6px}
-.t-tag{font:700 12px var(--font-body);color:var(--dim);letter-spacing:.02em}
-.t-goal{color:var(--dim);font:500 15px/1.55 var(--font-body);margin-top:10px}
-.t-meta{font:700 12px var(--font-body);color:var(--faint);margin-top:10px}
+.today{position:relative;width:calc(100% - 32px);max-width:560px;margin:14px auto 0;padding:22px 20px 20px;border:1px solid color-mix(in srgb,var(--lime) 20%,var(--line-soft));border-radius:22px;background:linear-gradient(135deg,var(--surface),color-mix(in srgb,var(--lime) 5%,var(--surface)));box-shadow:var(--shadow);overflow:hidden}
+.today::before{content:'';position:absolute;left:0;right:0;top:0;height:3px;background:var(--lime)}
+.t-title{font:700 30px/1.12 var(--font-display);letter-spacing:-.04em;margin:10px 0 8px}
+.t-tag{display:inline-flex;align-items:center;width:fit-content;padding:6px 10px;border-radius:999px;background:var(--lime-soft);font:800 11px var(--font-body);color:var(--lime);letter-spacing:.04em}
+.t-goal{color:var(--dim);font:500 15px/1.55 var(--font-body);margin-top:14px;overflow-wrap:anywhere}
+.t-meta{font:700 12px var(--font-body);color:var(--faint);margin-top:12px;overflow-wrap:anywhere}
 .btn-primary{
   display:flex;align-items:center;justify-content:center;gap:10px;
   width:100%;min-height:56px;height:auto;border-radius:16px;
@@ -153,7 +156,7 @@ body.on-day #nav{transform:translateX(-50%) translateY(130px);opacity:0;pointer-
 .btn-primary svg{width:16px;height:16px}
 .btn-primary small{font:700 12px;opacity:.72}
 
-.stats{display:flex;margin:18px 20px 0;border:1px solid var(--line-soft);border-radius:18px;background:var(--surface);overflow:hidden;max-width:560px;box-shadow:var(--shadow)}
+.stats{display:flex;width:calc(100% - 32px);margin:14px auto 0;border:1px solid var(--line-soft);border-radius:18px;background:var(--surface);overflow:hidden;max-width:560px;box-shadow:var(--shadow)}
 .st3{min-width:0;padding:15px 8px;text-align:center}
 .st3:first-child{flex:1.35}
 .st3{flex:1}
@@ -162,8 +165,8 @@ body.on-day #nav{transform:translateX(-50%) translateY(130px);opacity:0;pointer-
 .st3 span{font:800 9px var(--font-body);letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-top:2px;overflow-wrap:anywhere}
 .st3b{justify-content:center;flex-wrap:wrap;row-gap:2px;text-align:center}
 
-.week{padding:22px 20px 8px;max-width:560px;margin:0 auto;width:100%}
-.wk-chips{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px;margin-top:10px}
+.week{width:calc(100% - 32px);max-width:560px;margin:14px auto 0;padding:18px 16px 16px;border:1px solid var(--line-soft);border-radius:20px;background:var(--surface);box-shadow:var(--shadow)}
+.wk-chips{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:7px;margin-top:12px}
 .wd{
   min-width:0;height:56px;border-radius:14px;
   border:1px solid var(--line-soft);
@@ -179,7 +182,7 @@ body.on-day #nav{transform:translateX(-50%) translateY(130px);opacity:0;pointer-
 .wd.now b{color:var(--lime)}
 
 /* milestone */
-.done-hero{padding:26px 20px;max-width:560px;margin:0 auto}
+.done-hero{width:calc(100% - 32px);max-width:560px;margin:14px auto 0;padding:24px 20px;border:1px solid color-mix(in srgb,var(--lime) 24%,var(--line-soft));border-radius:22px;background:var(--surface);box-shadow:var(--shadow)}
 .done-hero h2{font:700 24px/1.25 var(--font-display);margin:10px 0 12px}
 .done-hero p{color:var(--dim);font:500 15px/1.6}
 .done-hero p+p{margin-top:10px}
@@ -641,7 +644,8 @@ body.on-day #toast{top:calc(78px + env(safe-area-inset-top))}
 }
 @media(min-width:768px){
   .goal-line{margin-left:auto;margin-right:auto;max-width:720px}
-  .today,.done-hero,.week{padding-left:0;padding-right:0}
+  .today{padding-left:20px;padding-right:20px}
+  .week{padding-left:16px;padding-right:16px}
   .ex{padding:20px 20px 12px;--set-grid:38px 18px 40px minmax(80px,1fr) 40px 76px;--set-gap:8px}
 }
 @media(hover:hover) and (pointer:fine){

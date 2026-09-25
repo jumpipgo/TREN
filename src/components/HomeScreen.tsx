@@ -100,7 +100,8 @@ export function HomeScreen({ visible, onOpenDay, onOpenCycle, onToast, onCelebra
         </button>
       </header>
       <div id="homeBody">
-        <section className="hero">
+        <section className="hero home-overview">
+          <div className="overview-top"><span className="label">прогресс макроцикла</span><span className="overview-week">{completed ? 'завершено' : `неделя ${week} / 4`}</span></div>
           <div className="ring"><ProgressRing state={state} currentDay={currentDay} /> <div className="ring-c">{center}</div></div>
         </section>
 
