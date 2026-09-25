@@ -41,7 +41,7 @@ export function WorkoutProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     saveState(window.localStorage, state);
     document.documentElement.dataset.theme = state.theme;
-    const themeColor = state.theme === 'dark' ? '#0A0D0F' : '#F1F1EF';
+    const themeColor = state.theme === 'dark' ? '#000000' : '#F1F1EF';
     document.querySelector('meta[name="theme-color"]')?.setAttribute('content', themeColor);
   }, [state]);
 
