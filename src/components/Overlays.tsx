@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { HELP } from '../content/help';
 import { DAYS, OUTRO } from '../content/program';
 import type { HelpKey, SummaryData } from '../domain/types';
 import { formatKg } from '../utils/format';
+import type { YouTubeVideo } from '../utils/youtube';
 import { Sheet } from './Sheet';
 import { PrintIcon } from './Icons';
 
@@ -20,6 +21,8 @@ interface OverlaysProps {
   onSaveWeight: (value: number | null) => void;
   helpKey: HelpKey | null;
   summary: SummaryData | null;
+  video: YouTubeVideo | null;
+  onCloseVideo: () => void;
   milestoneOpen: boolean;
   onCloseMilestone: () => void;
   onHomeFromSummary: () => void;
@@ -92,13 +95,57 @@ export function MilestoneSheet({ open, onClose, onToast }: { open: boolean; onCl
   );
 }
 
-export function Overlays({ scrimOpen, onClose, weightContext, onSaveWeight, helpKey, summary, milestoneOpen, onCloseMilestone, onHomeFromSummary, onToast }: OverlaysProps) {
+function VideoModal({ video, onClose }: { video: YouTubeVideo | null; onClose: () => void }) {
+  const closeRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!video) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') onClose();
+    };
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    closeRef.current?.focus();
+    window.addEventListener('keydown', onKeyDown);
+    return () => {
+      window.removeEventListener('keydown', onKeyDown);
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [video, onClose]);
+
+  return (
+    <div
+      className={`yt-modal ${video ? 'on' : ''}`}
+      aria-hidden={!video}
+      onClick={(event) => { if (event.target === event.currentTarget) onClose(); }}
+    >
+      <div className="yt-dialog" role="dialog" aria-modal="true" aria-label="Видео упражнения">
+        <button ref={closeRef} type="button" className="yt-close" onClick={onClose} tabIndex={video ? 0 : -1} aria-label="Закрыть видео">×</button>
+        <div className="yt-frame">
+          {video ? (
+            <iframe
+              key={video.embedUrl}
+              src={video.embedUrl}
+              title="Видео упражнения"
+              allow="autoplay; encrypted-media; picture-in-picture"
+              allowFullScreen
+              referrerPolicy="strict-origin-when-cross-origin"
+            />
+          ) : null}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function Overlays({ scrimOpen, onClose, weightContext, onSaveWeight, helpKey, summary, video, onCloseVideo, milestoneOpen, onCloseMilestone, onHomeFromSummary, onToast }: OverlaysProps) {
   return (
     <>
       <div id="scrim" className={scrimOpen ? 'on' : ''} onClick={onClose} />
       <WeightSheet context={weightContext} onClose={onClose} onSave={onSaveWeight} />
       <HelpSheet helpKey={helpKey} onClose={onClose} />
       <SummarySheet summary={summary} onClose={onClose} onHome={onHomeFromSummary} />
+      <VideoModal video={video} onClose={onCloseVideo} />
       <MilestoneSheet open={milestoneOpen} onClose={onCloseMilestone} onToast={onToast} />
     </>
   );

@@ -20,6 +20,7 @@ interface DayScreenProps {
   onDayChange: (day: number) => void;
   onOpenHelp: (key: HelpKey) => void;
   onOpenWeight: (exercise: number, set: number, weight: number | null) => void;
+  onOpenVideo: (url: string) => void;
   onStartRest: (seconds: number) => void;
   onRequestWakeLock: () => void;
 }
@@ -31,6 +32,7 @@ export function DayScreen({
   onDayChange,
   onOpenHelp,
   onOpenWeight,
+  onOpenVideo,
   onStartRest,
   onRequestWakeLock,
 }: DayScreenProps) {
@@ -207,7 +209,7 @@ export function DayScreen({
               <div className="ex-head" onClick={() => cardDone && toggleCard(exerciseIndex)} role={cardDone ? 'button' : undefined} tabIndex={cardDone ? 0 : undefined}>
                 <div className="ex-top">
                   <span className="ex-n">{exerciseIndex + 1}</span>
-                  <a className="ex-name" href={exercise.url} target="_blank" rel="noopener" onClick={(event) => event.stopPropagation()}><span className="ex-label">{exercise.name}</span><span className="play"><PlayIcon /></span></a>
+                  <button type="button" className="ex-name" data-youtube-url={exercise.url} onClick={(event) => { event.stopPropagation(); onOpenVideo(exercise.url); }}><span className="ex-label">{exercise.name}</span><span className="play"><PlayIcon /></span></button>
                 </div>
                 <div className="ex-meta">
                   <span className="ex-scheme">{exercise.s} × {exercise.min}–{exercise.max}</span>
