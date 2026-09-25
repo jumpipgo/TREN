@@ -1,11 +1,11 @@
 {
-  "id": "./",
+  "id": "./?source=pwa",
   "name": "МЕЗО · Классический сплит",
   "short_name": "МЕЗО",
   "description": "Офлайн-трекер тренировок МЕЗО",
   "lang": "ru",
   "dir": "ltr",
-  "start_url": "./",
+  "start_url": "./?source=pwa",
   "scope": "./",
   "display": "fullscreen",
   "display_override": ["fullscreen", "standalone", "minimal-ui"],
