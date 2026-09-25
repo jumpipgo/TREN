@@ -1,4 +1,4 @@
-const CACHE_NAME = 'meso-pwa-v5';
+const CACHE_NAME = 'meso-pwa-v3';
 const APP_SHELL = [
   './',
   './index.html',
