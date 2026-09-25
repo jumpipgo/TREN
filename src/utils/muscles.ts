@@ -4,62 +4,71 @@ export interface MuscleGroup {
   paths: string[];
 }
 
+const torso = [
+  'M12 4.5a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z',
+  'M8 6c-2 1-3 3-3 6v4h3v8h8v-8h3v-4c0-3-1-5-3-6-1.5 1-5.5 1-8 0Z',
+];
+const arm = [
+  'M7 4v6.5a6 6 0 0 0 8 5.5l2-1V4h-2v6.5a4 4 0 0 1-4 0V4Z',
+  'M7 4c0 1.5 1.5 2.5 3 2.5S13 5.5 13 4M9 16l-2 5M15 16l2 5',
+];
+const legs = [
+  'M7 3h10M9 3v6l-2 12M15 3v6l2 12M7 21h4M13 21h4',
+];
+
 export const MUSCLE_GROUPS: Record<string, MuscleGroup> = {
   chest: {
     label: 'грудные',
     color: '#C6F542',
-    paths: [
-      'M6 4C4 4 3 5.5 3 8v3.5C3 14 4.5 15 7 15l1 5h8l1-5c2.5 0 4-1 4-3.5V8c0-2.5-1-4-3-4-1.8 0-3.7 1-6 3-2.3-2-4.2-3-6-3Z',
-      'M7 10h10',
-    ],
+    paths: [...torso, 'M7 11c1.5 1 3 1.5 5 1.5s3.5-.5 5-1.5'],
   },
   back: {
     label: 'спина',
     color: '#72B7FF',
-    paths: [
-      'M6 4c-2 0-3 1.5-3 4v3c0 2 1.5 3 3.5 3L8 20h8l1.5-6c2 0 3.5-1 3.5-3V8c0-2.5-1-4-3-4-1.8 0-3.7 1-6 3-2.3-2-4.2-3-6-3Z',
-      'M12 7v12M9 10h6',
-    ],
+    paths: [...torso, 'M12 7v12M9 10h6'],
   },
   shoulders: {
     label: 'плечи',
     color: '#F0B849',
-    paths: ['M5 8l4-3 3 3 3-3 4 3-2 7-4-1-1 4h-4l-1-4-4 1-2-7Z', 'M9 5l3 3 3-3'],
+    paths: [...torso, 'M6 10c1.5 1 3 1.5 6 1.5S16.5 11 18 10'],
   },
   biceps: {
     label: 'бицепс',
     color: '#D18CFF',
-    paths: ['M8 4v5a6 6 0 1 0 8 5V4', 'M8 4c0 2 2 3 4 3s4-1 4-3M8 15l-2 5M16 15l2 5'],
+    paths: arm,
   },
   triceps: {
     label: 'трицепс',
     color: '#7FE0C0',
-    paths: ['M8 3v8a5 5 0 0 0 5 5h3', 'M13 4l3 3 3-3M13 20l3-3 3 3', 'M8 3h4'],
+    paths: arm,
   },
   core: {
     label: 'пресс',
     color: '#FF8A6B',
-    paths: ['M7 4h10v5l-1 11H8L7 9V4Z', 'M8 9h8M12 9v10M9 14h6'],
+    paths: [...torso, 'M8 11h8M12 11v10M9 15h6'],
   },
   legs: {
     label: 'ноги',
     color: '#7CA7FF',
-    paths: ['M6 3h12M9 3v6l-2 12M15 3v6l2 12M7 21h4M13 21h4'],
+    paths: legs,
   },
   calves: {
     label: 'икры',
     color: '#65D6D6',
-    paths: ['M7 3h10M9 3v5l-3 13M15 3v5l3 13M7 21h4M13 21h4', 'M8 11c1 2 2 2 3 0M14 11c-1 2-2 2-3 0'],
+    paths: [...legs, 'M8 11c1 2 2 2 3 0M14 11c-1 2-2 2-3 0'],
   },
   traps: {
     label: 'трапеции',
     color: '#B0BCC7',
-    paths: ['M8 3l4 4 4-4M5 8c2 0 3 1 4 3M19 8c-2 0-3 1-4 3M9 11l3 4 3-4M12 15v6'],
+    paths: [...torso, 'M8 6l4 3 4-3M9 10h6'],
   },
   full: {
     label: 'всё тело',
     color: '#B6C0C9',
-    paths: ['M12 5m-2.5 0a2.5 2.5 0 1 0 5 0a2.5 2.5 0 1 0-5 0', 'M12 8v6M8 10l4-2 4 2M9 21l3-7 3 7'],
+    paths: [
+      'M12 4.5a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z',
+      'M8 6v5l-3 5M16 6v5l3 5M12 11v10M8 11h8',
+    ],
   },
 };
 
