@@ -10,7 +10,6 @@ source = '''package com.jumpipgo.meso;
 
 import android.content.ComponentName;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.net.Uri;
@@ -68,7 +67,7 @@ public class LauncherActivity extends com.google.androidbrowserhelper.trusted.La
         }
     };
 
-    private final ServiceConnection serviceConnection = new CustomTabsServiceConnection() {
+    private final CustomTabsServiceConnection serviceConnection = new CustomTabsServiceConnection() {
         @Override
         public void onCustomTabsServiceConnected(ComponentName name, CustomTabsClient client) {
             customTabsClient = client;
