@@ -1,0 +1,27 @@
+{
+  "packageId": "com.jumpipgo.meso",
+  "name": "МЕЗО",
+  "launcherName": "МЕЗО",
+  "host": "jumpipgo.github.io",
+  "startUrl": "https://jumpipgo.github.io/TREN/",
+  "iconUrl": "https://jumpipgo.github.io/TREN/icons/icon-512.png",
+  "maskableIconUrl": "https://jumpipgo.github.io/TREN/icons/icon-512.png",
+  "navigationColor": "#000000",
+  "navigationColorDark": "#000000",
+  "themeColor": "#000000",
+  "themeColorDark": "#000000",
+  "backgroundColor": "#000000",
+  "display": "fullscreen-sticky",
+  "orientation": "portrait",
+  "enableNotifications": false,
+  "enableSiteSettingsShortcut": false,
+  "fallbackType": "customtabs",
+  "appVersion": "0.2.0",
+  "appVersionCode": 3,
+  "webManifestUrl": "https://jumpipgo.github.io/TREN/manifest.webmanifest",
+  "splashScreenFadeOutDuration": 150,
+  "signingKey": {
+    "path": "android-keystore.jks",
+    "alias": "meso"
+  }
+}
