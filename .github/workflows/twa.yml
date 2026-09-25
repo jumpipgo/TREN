@@ -1,0 +1,79 @@
+name: Build TWA
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Setup Android
+        uses: android-actions/setup-android@v3
+
+      - name: Install Bubblewrap
+        run: npm install --global @bubblewrap/cli@1.25.0
+
+      - name: Restore signing key
+        env:
+          TWA_KEYSTORE_BASE64: ${{ secrets.TWA_KEYSTORE_BASE64 }}
+        run: |
+          printf '%s' "$TWA_KEYSTORE_BASE64" | base64 --decode > android-keystore.p12
+          chmod 600 android-keystore.p12
+
+      - name: Generate TWA project
+        run: bubblewrap update --manifest=twa-manifest.json --skipVersionUpgrade
+
+      - name: Build signed APK
+        env:
+          BUBBLEWRAP_KEYSTORE_PASSWORD: ${{ secrets.TWA_KEYSTORE_PASSWORD }}
+          BUBBLEWRAP_KEY_PASSWORD: ${{ secrets.TWA_KEY_PASSWORD }}
+        run: bubblewrap build --skipPwaValidation --manifest=.
+
+      - name: Package APK and Digital Asset Links
+        env:
+          TWA_KEYSTORE_PASSWORD: ${{ secrets.TWA_KEYSTORE_PASSWORD }}
+        run: |
+          set -euo pipefail
+          mkdir -p twa-artifacts
+          apk="$(find . -name app-release-signed.apk -print -quit)"
+          test -n "$apk"
+          cp "$apk" twa-artifacts/meso-twa.apk
+          fingerprint="$(keytool -list -v -keystore android-keystore.p12 -alias meso -storepass "$TWA_KEYSTORE_PASSWORD" | awk -F': ' '/SHA256:/ {print $2; exit}' | tr -d ':')"
+          test -n "$fingerprint"
+          printf '%s\n' "$fingerprint" > twa-artifacts/sha256-fingerprint.txt
+          cat > twa-artifacts/assetlinks.json <<JSON
+          [
+            {
+              "relation": ["delegate_permission/common.handle_all_urls"],
+              "target": {
+                "namespace": "android_app",
+                "package_name": "com.jumpipgo.meso",
+                "sha256_cert_fingerprints": ["$fingerprint"]
+              }
+            }
+          ]
+          JSON
+          cat twa-artifacts/assetlinks.json
+
+      - name: Upload TWA artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: meso-twa
+          path: twa-artifacts
