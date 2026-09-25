@@ -3,7 +3,7 @@ import { DAYS, DOW, OUTRO, TAGS } from '../content/program';
 import { useWorkout } from '../domain/WorkoutContext';
 import { allDone, cycleTotals, dayStats, nextDay } from '../domain/state';
 import { formatKg } from '../utils/format';
-import { ThemeIcon } from './Icons';
+import { ThemeIcon, FullscreenIcon } from './Icons';
 
 interface HomeScreenProps {
   visible: boolean;
@@ -11,6 +11,8 @@ interface HomeScreenProps {
   onOpenCycle: () => void;
   onToast: (message: string) => void;
   onCelebrate: () => void;
+  isFullscreen: boolean;
+  onToggleFullscreen: () => void;
 }
 
 function ringPath(start: number, end: number): string {
@@ -39,7 +41,7 @@ function ProgressRing({ state, currentDay }: { state: ReturnType<typeof useWorko
   return <svg viewBox="0 0 180 180">{paths}</svg>;
 }
 
-export function HomeScreen({ visible, onOpenDay, onOpenCycle, onToast, onCelebrate }: HomeScreenProps) {
+export function HomeScreen({ visible, onOpenDay, onOpenCycle, onToast, onCelebrate, isFullscreen, onToggleFullscreen }: HomeScreenProps) {
   const { state, setTheme } = useWorkout();
   const currentDay = nextDay(state);
   const activeDay = currentDay ?? 1;
@@ -87,17 +89,20 @@ export function HomeScreen({ visible, onOpenDay, onOpenCycle, onToast, onCelebra
         <button className="brand brand-button" onClick={onOpenCycle} aria-label="Открыть карту цикла">
           <b>МЕЗО<i>.</i></b><span>тренировки · offline</span>
         </button>
-        <button
-          className="icon-btn"
-          onClick={() => {
-            const theme = state.theme === 'dark' ? 'light' : 'dark';
-            setTheme(theme);
-            onToast(theme === 'dark' ? 'Тёмная тема — для зала' : 'Светлая тема — для дома');
-          }}
-          aria-label="Переключить тему"
-        >
-          <ThemeIcon />
-        </button>
+        <div className="top-actions">
+          <button className="icon-btn" onClick={onToggleFullscreen} aria-label={isFullscreen ? 'Выйти из полноэкранного режима' : 'Открыть полноэкранный режим'} aria-pressed={isFullscreen}><FullscreenIcon /></button>
+          <button
+            className="icon-btn"
+            onClick={() => {
+              const theme = state.theme === 'dark' ? 'light' : 'dark';
+              setTheme(theme);
+              onToast(theme === 'dark' ? 'Тёмная тема — для зала' : 'Светлая тема — для дома');
+            }}
+            aria-label="Переключить тему"
+          >
+            <ThemeIcon />
+          </button>
+        </div>
       </header>
       <div id="homeBody">
         <section className="hero">

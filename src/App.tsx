@@ -174,10 +174,10 @@ function WorkoutApp() {
 
   return (
     <>
-      <HomeScreen visible={screen === 'home'} onOpenDay={openDay} onOpenCycle={onOpenCycle} onToast={showToast} onCelebrate={celebrate} />
+      <HomeScreen visible={screen === 'home'} onOpenDay={openDay} onOpenCycle={onOpenCycle} onToast={showToast} onCelebrate={celebrate} isFullscreen={fullscreen.isFullscreen} onToggleFullscreen={fullscreen.toggle} />
       <CycleScreen visible={screen === 'cycle'} onOpenDay={openDay} onToast={showToast} />
       <ProfileScreen visible={screen === 'profile'} canInstall={Boolean(installPrompt)} onInstall={onInstall} onToast={showToast} />
-      <DayScreen visible={screen === 'day'} day={currentDay} onBack={onBack} onDayChange={changeDay} onOpenHelp={openHelp} onOpenWeight={openWeight} onStartRest={onStartRest} onRequestWakeLock={onRequestWakeLock} isFullscreen={fullscreen.isFullscreen} onToggleFullscreen={fullscreen.toggle} />
+      <DayScreen visible={screen === 'day'} day={currentDay} onBack={onBack} onDayChange={changeDay} onOpenHelp={openHelp} onOpenWeight={openWeight} onStartRest={onStartRest} onRequestWakeLock={onRequestWakeLock} />
       <BottomNav screen={screen} onNavigate={navigate} />
       <SessionBar visible={screen === 'day'} done={stats.done} total={stats.total} tonnage={tonnage} finished={finished} onFinish={completeDay} onOpenHelp={() => openHelp('tonnage')} />
       <RestTimer timer={restTimer} onOpenHelp={() => openHelp('rest')} />
