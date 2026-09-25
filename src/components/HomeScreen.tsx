@@ -87,19 +87,17 @@ export function HomeScreen({ visible, onOpenDay, onOpenCycle, onToast, onCelebra
         <button className="brand brand-button" onClick={onOpenCycle} aria-label="Открыть карту цикла">
           <b>МЕЗО<i>.</i></b><span>тренировки · offline</span>
         </button>
-        <div className="top-actions">
-          <button
-            className="icon-btn"
-            onClick={() => {
-              const theme = state.theme === 'dark' ? 'light' : 'dark';
-              setTheme(theme);
-              onToast(theme === 'dark' ? 'Тёмная тема — для зала' : 'Светлая тема — для дома');
-            }}
-            aria-label="Переключить тему"
-          >
-            <ThemeIcon />
-          </button>
-        </div>
+        <button
+          className="icon-btn"
+          onClick={() => {
+            const theme = state.theme === 'dark' ? 'light' : 'dark';
+            setTheme(theme);
+            onToast(theme === 'dark' ? 'Тёмная тема — для зала' : 'Светлая тема — для дома');
+          }}
+          aria-label="Переключить тему"
+        >
+          <ThemeIcon />
+        </button>
       </header>
       <div id="homeBody">
         <section className="hero">
