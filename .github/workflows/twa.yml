@@ -59,7 +59,16 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: meso-twa-source
-          path: android
+          path: |
+            app
+            build.gradle
+            settings.gradle
+            gradle.properties
+            gradlew
+            gradlew.bat
+            gradle
+            manifest-checksum.txt
+            twa-manifest.json
           retention-days: 1
 
       - name: Build signed APK
