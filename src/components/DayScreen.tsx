@@ -11,7 +11,7 @@ import {
 import type { HelpKey } from '../domain/types';
 import { formatWeight, vibrate } from '../utils/format';
 import { inferMuscle } from '../utils/muscles';
-import { PlayIcon, BackIcon } from './Icons';
+import { PlayIcon, BackIcon, FullscreenIcon } from './Icons';
 
 interface DayScreenProps {
   visible: boolean;
@@ -22,6 +22,8 @@ interface DayScreenProps {
   onOpenWeight: (exercise: number, set: number, weight: number | null) => void;
   onStartRest: (seconds: number) => void;
   onRequestWakeLock: () => void;
+  isFullscreen: boolean;
+  onToggleFullscreen: () => void;
 }
 
 export function DayScreen({
@@ -33,6 +35,8 @@ export function DayScreen({
   onOpenWeight,
   onStartRest,
   onRequestWakeLock,
+  isFullscreen,
+  onToggleFullscreen,
 }: DayScreenProps) {
   const { state, setReps, setWeight, toggleSet } = useWorkout();
   const listRef = useRef<HTMLDivElement>(null);
@@ -169,7 +173,10 @@ export function DayScreen({
             <div className="dh-sub">неделя {Math.ceil(day / 3)} · {DOW[(day - 1) % 3]} · {TAGS[(day - 1) % 3]}</div>
             <h1>Тренировка #{day}</h1>
           </div>
-          <button className="dh-prog" onClick={() => onOpenHelp('progress')} aria-label="Справка: прогресс тренировки">{finished ? '✓' : `${stats.done}/${stats.total}`}</button>
+          <div className="dh-actions">
+            <button className="dh-prog" onClick={() => onOpenHelp('progress')} aria-label="Справка: прогресс тренировки">{finished ? '✓' : `${stats.done}/${stats.total}`}</button>
+            <button className="icon-btn" onClick={onToggleFullscreen} aria-label={isFullscreen ? 'Выйти из полноэкранного режима' : 'Открыть полноэкранный режим'} aria-pressed={isFullscreen}><FullscreenIcon /></button>
+          </div>
         </div>
         <div className="dh-bar"><i style={{ width: `${stats.total ? (stats.done / stats.total) * 100 : 0}%` }} /></div>
       </header>

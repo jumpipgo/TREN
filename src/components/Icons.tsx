@@ -30,6 +30,10 @@ export function ProfileIcon({ size = 19 }: IconProps) {
   return <svg {...base(size)}><circle cx="12" cy="8" r="3.2"/><path d="M5 20c.7-3.5 3.1-5.2 7-5.2s6.3 1.7 7 5.2"/></svg>;
 }
 
+export function FullscreenIcon({ size = 17 }: IconProps) {
+  return <svg {...base(size)}><path d="M8 3H3v5M16 3h5v5M8 21H3v-5M21 16v5h-5"/></svg>;
+}
+
 export function CheckIcon({ size = 13 }: IconProps) {
   return <svg {...base(size)} strokeWidth={3.2}><path d="M4 12.5l5 5L20 6.5"/></svg>;
 }

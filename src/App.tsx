@@ -5,6 +5,7 @@ import { dayReps, dayStats, dayTonnage, nextDay, progressionExercises } from './
 import type { HelpKey, Screen, SummaryData } from './domain/types';
 import { useRestTimer } from './hooks/useRestTimer';
 import { useWakeLock } from './hooks/useWakeLock';
+import { useFullscreen } from './hooks/useFullscreen';
 import { formatClock } from './utils/format';
 import { Confetti } from './components/Confetti';
 import { CycleScreen } from './components/CycleScreen';
@@ -42,6 +43,7 @@ function WorkoutApp() {
   const [installPrompt, setInstallPrompt] = useState<InstallPromptEvent | null>(null);
   const restTimer = useRestTimer();
   const requestWakeLock = useWakeLock();
+  const fullscreen = useFullscreen();
 
   useEffect(() => {
     document.body.classList.toggle('on-day', screen === 'day');
@@ -175,7 +177,7 @@ function WorkoutApp() {
       <HomeScreen visible={screen === 'home'} onOpenDay={openDay} onOpenCycle={onOpenCycle} onToast={showToast} onCelebrate={celebrate} />
       <CycleScreen visible={screen === 'cycle'} onOpenDay={openDay} onToast={showToast} />
       <ProfileScreen visible={screen === 'profile'} canInstall={Boolean(installPrompt)} onInstall={onInstall} onToast={showToast} />
-      <DayScreen visible={screen === 'day'} day={currentDay} onBack={onBack} onDayChange={changeDay} onOpenHelp={openHelp} onOpenWeight={openWeight} onStartRest={onStartRest} onRequestWakeLock={onRequestWakeLock} />
+      <DayScreen visible={screen === 'day'} day={currentDay} onBack={onBack} onDayChange={changeDay} onOpenHelp={openHelp} onOpenWeight={openWeight} onStartRest={onStartRest} onRequestWakeLock={onRequestWakeLock} isFullscreen={fullscreen.isFullscreen} onToggleFullscreen={fullscreen.toggle} />
       <BottomNav screen={screen} onNavigate={navigate} />
       <SessionBar visible={screen === 'day'} done={stats.done} total={stats.total} tonnage={tonnage} finished={finished} onFinish={completeDay} onOpenHelp={() => openHelp('tonnage')} />
       <RestTimer timer={restTimer} onOpenHelp={() => openHelp('rest')} />
