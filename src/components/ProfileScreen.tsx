@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 import { useWorkout } from '../domain/WorkoutContext';
+import { useAccess } from '../domain/access';
 import { cycleTotals, normalizeState } from '../domain/state';
 import { formatKg } from '../utils/format';
 
@@ -12,6 +13,7 @@ interface ProfileScreenProps {
 
 export function ProfileScreen({ visible, canInstall, onInstall, onToast }: ProfileScreenProps) {
   const { state, setTheme, resetDays, replaceState } = useWorkout();
+  const { lock } = useAccess();
   const fileInput = useRef<HTMLInputElement>(null);
   const [confirmReset, setConfirmReset] = useState(false);
   const totals = cycleTotals(state);
@@ -61,6 +63,13 @@ export function ProfileScreen({ visible, canInstall, onInstall, onToast }: Profi
             <button className={state.theme === 'dark' ? 'active' : ''} onClick={() => setTheme('dark')}>Тёмная</button>
             <button className={state.theme === 'light' ? 'active' : ''} onClick={() => setTheme('light')}>Светлая</button>
           </div>
+        </section>
+
+        <section className="profile-card">
+          <div className="profile-card-title">Безопасность</div>
+          <button className="profile-row" onClick={lock}>
+            <span><b>Заблокировать МЕЗО</b><small>Ввести PIN при следующем открытии</small></span><i>◈</i>
+          </button>
         </section>
 
         <section className="profile-card">
