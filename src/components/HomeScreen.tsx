@@ -3,7 +3,6 @@ import { DAYS, DOW, OUTRO, TAGS } from '../content/program';
 import { useWorkout } from '../domain/WorkoutContext';
 import { allDone, cycleTotals, dayStats, nextDay } from '../domain/state';
 import { formatKg } from '../utils/format';
-import { ThemeIcon } from './Icons';
 
 interface HomeScreenProps {
   visible: boolean;
@@ -96,7 +95,7 @@ export function HomeScreen({ visible, onOpenDay, onOpenCycle, onToast, onCelebra
           }}
           aria-label="Переключить тему"
         >
-          <ThemeIcon />
+          <span className="emo" aria-hidden="true">{state.theme === 'dark' ? '🌙' : '☀️'}</span>
         </button>
       </header>
       <div id="homeBody">

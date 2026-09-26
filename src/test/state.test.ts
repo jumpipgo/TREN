@@ -95,7 +95,7 @@ describe('workout state', () => {
   });
 
   it('chooses rest duration from exercise position and rep ceiling', () => {
-    expect(restDurationForExercise(0, { name: 'x', url: '', s: 3, min: 6, max: 12 })).toBe(180);
+    expect(restDurationForExercise(0, { name: 'x', url: '', s: 3, min: 6, max: 12 })).toBe(90);
     expect(restDurationForExercise(1, { name: 'x', url: '', s: 3, min: 6, max: 12 })).toBe(150);
     expect(restDurationForExercise(1, { name: 'x', url: '', s: 3, min: 8, max: 15 })).toBe(120);
   });

@@ -5,7 +5,6 @@ import type { HelpKey, SummaryData } from '../domain/types';
 import { formatKg } from '../utils/format';
 import type { YouTubeVideo } from '../utils/youtube';
 import { Sheet } from './Sheet';
-import { PrintIcon } from './Icons';
 
 export interface WeightContext {
   day: number;
@@ -91,7 +90,7 @@ export function SummarySheet({ summary, onClose, onHome }: { summary: SummaryDat
         <div className="fin-row"><span>Время сессии</span><b>{summary?.time ?? '—'}</b></div>
       </div>
       {summary?.progression.length ? <div className="fin-pr" id="finPr"><span className="label">прогрессия к следующему разу</span>{summary.progression.slice(0, 4).map((name) => <span className="pr" key={name}><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M6 10V2M2.8 5.2L6 2l3.2 3.2" /></svg>{name} · +2,5 кг</span>)}</div> : null}
-      <div className="sh-actions"><button className="btn-ghost" id="btnPrint" onClick={() => window.print()}><PrintIcon />Печать / PDF</button><button className="btn-primary" id="finHome" onClick={onHome}>На главную</button></div>
+      <div className="sh-actions"><button className="btn-ghost" id="btnPrint" onClick={() => window.print()}><i className="emo" aria-hidden="true">🖨️</i>Печать / PDF</button><button className="btn-primary" id="finHome" onClick={onHome}><i className="emo" aria-hidden="true">📍</i>На главную</button></div>
     </Sheet>
   );
 }
