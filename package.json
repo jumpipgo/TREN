@@ -20,6 +20,7 @@
   },
   "devDependencies": {
     "@rollup/rollup-linux-x64-gnu": "4.63.5",
+    "@types/node": "24.19.0",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
     "@vitejs/plugin-react": "4.3.4",

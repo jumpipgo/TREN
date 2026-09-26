@@ -27,6 +27,8 @@ jobs:
           cache: npm
       - name: Install dependencies
         run: npm ci
+      - name: Check (CSS, contrast, type scale, tests)
+        run: npm run check
       - name: Build
         run: npm run build
       - name: Setup Pages
