@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { HELP } from '../content/help';
 import { DAYS, OUTRO } from '../content/program';
 import type { HelpKey, SummaryData } from '../domain/types';
@@ -108,47 +108,8 @@ export function MilestoneSheet({ open, onClose, onToast }: { open: boolean; onCl
   );
 }
 
-type FloatSize = 'small' | 'wide';
-
-const EDGE = 8;
-/** Радиус, в котором окно примагничивается к краю экрана. */
-const SNAP = 32;
-
-function bounds(node: HTMLElement | null) {
-  const rect = node?.getBoundingClientRect();
-  const width = rect?.width ?? 240;
-  const height = rect?.height ?? 140;
-  return {
-    minX: EDGE,
-    maxX: Math.max(EDGE, window.innerWidth - width - EDGE),
-    minY: EDGE,
-    maxY: Math.max(EDGE, window.innerHeight - height - EDGE),
-  };
-}
-
-/** Окно всегда остаётся целиком на экране — зажать его пальцем невозможно. */
-function clampOffset(next: { x: number; y: number }, node: HTMLElement | null) {
-  const { minX, maxX, minY, maxY } = bounds(node);
-  return {
-    x: Math.min(Math.max(next.x, minX), maxX),
-    y: Math.min(Math.max(next.y, minY), maxY),
-  };
-}
-
-/** После отпускания окно притягивается к ближайшему краю. */
-function snapOffset(next: { x: number; y: number }, node: HTMLElement | null) {
-  const { minX, maxX, minY, maxY } = bounds(node);
-  const x = next.x <= minX + SNAP ? minX : next.x >= maxX - SNAP ? maxX : next.x;
-  const y = next.y <= minY + SNAP ? minY : next.y >= maxY - SNAP ? maxY : next.y;
-  return { x, y };
-}
-
 function VideoModal({ video, onClose }: { video: YouTubeVideo | null; onClose: () => void }) {
   const closeRef = useRef<HTMLButtonElement>(null);
-  const dialogRef = useRef<HTMLDivElement>(null);
-  const drag = useRef<{ pointerId: number; offsetX: number; offsetY: number } | null>(null);
-  const [offset, setOffset] = useState<{ x: number; y: number } | null>(null);
-  const [size, setSize] = useState<FloatSize>('small');
 
   useEffect(() => {
     if (!video) return;
@@ -165,113 +126,14 @@ function VideoModal({ video, onClose }: { video: YouTubeVideo | null; onClose: (
     };
   }, [video, onClose]);
 
-  // Каждое новое видео открывается в центре.
-  useEffect(() => {
-    if (!video) return;
-    setOffset(null);
-    setSize('small');
-  }, [video]);
-
-  // Границы: окно не уходит за экран, но хотя бы GRAB_VISIBLE px с заголовка остаются видимыми.
-  useEffect(() => {
-    if (!video || !offset) return;
-    const clamp = () => setOffset((current) => (current ? clampOffset(current, dialogRef.current) : current));
-    clamp();
-    window.addEventListener('resize', clamp);
-    window.addEventListener('orientationchange', clamp);
-    return () => {
-      window.removeEventListener('resize', clamp);
-      window.removeEventListener('orientationchange', clamp);
-    };
-  }, [video, offset, size]);
-
-  const onPointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
-    if (event.button !== 0 && event.pointerType === 'mouse') return;
-    const node = dialogRef.current;
-    if (!node) return;
-    const rect = node.getBoundingClientRect();
-    drag.current = { pointerId: event.pointerId, offsetX: event.clientX - rect.left, offsetY: event.clientY - rect.top };
-    event.currentTarget.setPointerCapture(event.pointerId);
-  };
-
-  const onPointerMove = (event: ReactPointerEvent<HTMLDivElement>) => {
-    const state = drag.current;
-    if (!state || state.pointerId !== event.pointerId) return;
-    const next = clampOffset({ x: event.clientX - state.offsetX, y: event.clientY - state.offsetY }, dialogRef.current);
-    setOffset((current) => (current && current.x === next.x && current.y === next.y ? current : next));
-  };
-
-  const endDrag = (event: ReactPointerEvent<HTMLDivElement>) => {
-    if (drag.current?.pointerId !== event.pointerId) return;
-    drag.current = null;
-    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
-      event.currentTarget.releasePointerCapture(event.pointerId);
-    }
-    // «Магнит»: если окно ушло к самому краю, примагничиваем к нему, чтобы заголовок остался в руках.
-    setOffset((current) => (current ? snapOffset(current, dialogRef.current) : current));
-  };
-
-  const resetPosition = () => setOffset(null);
-
-  const style: CSSProperties | undefined = offset
-    ? { position: 'absolute', left: offset.x, top: offset.y, right: 'auto', bottom: 'auto', transform: 'none', margin: 0 }
-    : undefined;
-
   return (
     <div
-      className={`yt-modal ${video ? 'on' : ''} ${offset ? 'floating' : ''}`}
+      className={`yt-modal ${video ? 'on' : ''}`}
       aria-hidden={!video}
       onClick={(event) => { if (event.target === event.currentTarget) onClose(); }}
     >
-      <div
-        ref={dialogRef}
-        className={`yt-dialog ${size}`}
-        style={style}
-        role="dialog"
-        aria-modal="true"
-        aria-label="Видео упражнения"
-      >
-        <div
-          className="yt-drag"
-          onPointerDown={onPointerDown}
-          onPointerMove={onPointerMove}
-          onPointerUp={endDrag}
-          onPointerCancel={endDrag}
-          onDoubleClick={resetPosition}
-        >
-          <span className="yt-grip" aria-hidden="true" />
-          <span className="yt-hint"><i>тянуть</i><b>перетащи · двойной тап — в центр</b></span>
-        </div>
-        <div className="yt-actions">
-          <button
-            type="button"
-            className="yt-size"
-            onClick={() => setSize((current) => (current === 'small' ? 'wide' : 'small'))}
-            tabIndex={video ? 0 : -1}
-            aria-label={size === 'small' ? 'Увеличить окно видео' : 'Уменьшить окно видео'}
-          >
-            {size === 'small' ? '⤢' : '⤡'}
-          </button>
-          <button
-            type="button"
-            className="yt-size"
-            onClick={resetPosition}
-            tabIndex={video ? 0 : -1}
-            aria-label="Вернуть окно в центр"
-          >
-            ⌖
-          </button>
-          <button
-            ref={closeRef}
-            type="button"
-            className="yt-close"
-            onClick={onClose}
-            tabIndex={video ? 0 : -1}
-            aria-label="Закрыть видео"
-          >
-            ×
-          </button>
-        </div>
+      <div className="yt-dialog" role="dialog" aria-modal="true" aria-label="Видео упражнения">
+        <button ref={closeRef} type="button" className="yt-close" onClick={onClose} tabIndex={video ? 0 : -1} aria-label="Закрыть видео">×</button>
         <div className="yt-frame">
           {video ? (
             <iframe
