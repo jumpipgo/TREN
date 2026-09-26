@@ -60,25 +60,25 @@ export function ProfileScreen({ visible, canInstall, onInstall, onToast }: Profi
         <section className="profile-card">
           <div className="profile-card-title">Внешний вид</div>
           <div className="theme-switch" role="group" aria-label="Выбор темы">
-            <button className={state.theme === 'dark' ? 'active' : ''} onClick={() => setTheme('dark')}>Тёмная</button>
-            <button className={state.theme === 'light' ? 'active' : ''} onClick={() => setTheme('light')}>Светлая</button>
+            <button className={state.theme === 'dark' ? 'active' : ''} onClick={() => setTheme('dark')}><i aria-hidden="true">🌙</i>Тёмная</button>
+            <button className={state.theme === 'light' ? 'active' : ''} onClick={() => setTheme('light')}><i aria-hidden="true">☀️</i>Светлая</button>
           </div>
         </section>
 
         <section className="profile-card">
           <div className="profile-card-title">Безопасность</div>
           <button className="profile-row" onClick={lock}>
-            <span><b>Заблокировать МЕЗО</b><small>Ввести PIN при следующем открытии</small></span><i>◈</i>
+            <span><b>Заблокировать МЕЗО</b><small>Ввести PIN при следующем открытии</small></span><i className="emo" aria-hidden="true">🔒</i>
           </button>
         </section>
 
         <section className="profile-card">
           <div className="profile-card-title">Данные</div>
           <button className="profile-row" onClick={exportJournal}>
-            <span><b>Экспортировать журнал</b><small>Сохранить данные в JSON-файл</small></span><i>↗</i>
+            <span><b>Экспортировать журнал</b><small>Сохранить данные в JSON-файл</small></span><i className="emo" aria-hidden="true">📤</i>
           </button>
           <button className="profile-row" onClick={() => fileInput.current?.click()}>
-            <span><b>Импортировать журнал</b><small>Восстановить данные из файла</small></span><i>↥</i>
+            <span><b>Импортировать журнал</b><small>Восстановить данные из файла</small></span><i className="emo" aria-hidden="true">📥</i>
           </button>
           <input ref={fileInput} type="file" accept="application/json,.json" hidden onChange={(event) => { const file = event.target.files?.[0]; if (file) void importJournal(file); event.target.value = ''; }} />
         </section>
@@ -87,7 +87,7 @@ export function ProfileScreen({ visible, canInstall, onInstall, onToast }: Profi
           <section className="profile-card install-card">
             <div className="profile-card-title">Установка</div>
             <p>Добавьте МЕЗО на домашний экран OnePlus 15 для запуска без адресной строки.</p>
-            <button className="btn-primary" onClick={onInstall}>Установить приложение</button>
+            <button className="btn-primary" onClick={onInstall}><i className="emo" aria-hidden="true">📲</i>Установить приложение</button>
           </section>
         )}
 
@@ -95,7 +95,7 @@ export function ProfileScreen({ visible, canInstall, onInstall, onToast }: Profi
           <div className="profile-card-title">Сброс</div>
           {!confirmReset ? (
             <button className="profile-row danger" onClick={() => setConfirmReset(true)}>
-              <span><b>Сбросить журнал</b><small>Удалить все отметки и результаты</small></span><i>×</i>
+              <span><b>Сбросить журнал</b><small>Удалить все отметки и результаты</small></span><i className="emo" aria-hidden="true">🗑️</i>
             </button>
           ) : (
             <div className="confirm-row">

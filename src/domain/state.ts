@@ -296,6 +296,6 @@ export function progressionExercises(state: AppState, dayNumber: number): string
 }
 
 export function restDurationForExercise(exerciseIndex: number, exercise: Exercise): number {
-  if (exerciseIndex === 0) return 180;
+  if (exerciseIndex === 0) return 90;
   return exercise.max <= 12 ? 150 : 120;
 }
