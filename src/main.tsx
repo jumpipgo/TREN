@@ -2,6 +2,8 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { App } from './App';
 import { AppErrorBoundary } from './components/AppErrorBoundary';
+import { AccessGate } from './components/AccessGate';
+import { AccessProvider } from './domain/access';
 import './styles.css';
 import { initTwaSystemUi } from './utils/twaSystemUi';
 
@@ -11,7 +13,11 @@ if (!root) throw new Error('Root element not found');
 createRoot(root).render(
   <StrictMode>
     <AppErrorBoundary>
-      <App />
+      <AccessProvider>
+        <AccessGate>
+          <App />
+        </AccessGate>
+      </AccessProvider>
     </AppErrorBoundary>
   </StrictMode>,
 );
