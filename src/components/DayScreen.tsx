@@ -240,7 +240,10 @@ export function DayScreen({
                     const set = index + 1;
                     const record = getSet(state, day, exerciseIndex, set);
                     const previousWeight = previous?.pairs[index]?.w ?? previous?.w ?? null;
-                    const weight = record?.w ?? carryWeight(state, day, exerciseIndex, set) ?? previousWeight;
+                    const carried = carryWeight(state, day, exerciseIndex, set);
+                    const weight = record?.w ?? carried ?? previousWeight;
+                    // Откуда взята цифра: своя — нормальный цвет, перенос/прошлый раз — приглушённый.
+                    const source = record?.w != null ? 'own' : carried != null ? 'carried' : previousWeight != null ? 'prev' : 'none';
                     const reps = record?.r;
                     const done = Boolean(record?.done);
                     const currentSet = !done && active && records.findIndex((item) => !item?.done) === index;
@@ -249,7 +252,7 @@ export function DayScreen({
                         <button className="check" onClick={() => handleToggle(exerciseIndex, set)} disabled={finished} role="checkbox" aria-checked={done} aria-label={`Подход ${set}`} />
                         <span className="set-n">{set}</span>
                         <button className="st" onClick={() => stepWeight(exerciseIndex, set, -2.5)} disabled={finished} aria-label="Минус 2,5 кг">−</button>
-                        <button className={`wbtn ${weight ? '' : 'empty'}`} data-w={weight ?? ''} onClick={() => onOpenWeight(exerciseIndex, set, weight)} disabled={finished} aria-label={`Вес подхода ${set}`}>{weight ? formatWeight(weight) : '—'}{weight ? <small>кг</small> : null}</button>
+                        <button className={`wbtn src-${source} ${weight ? '' : 'empty'}`} data-w={weight ?? ''} onClick={() => onOpenWeight(exerciseIndex, set, weight)} disabled={finished} aria-label={`Вес подхода ${set}`}>{weight ? formatWeight(weight) : '—'}{weight ? <small>кг</small> : null}</button>
                         <button className="st" onClick={() => stepWeight(exerciseIndex, set, 2.5)} disabled={finished} aria-label="Плюс 2,5 кг">+</button>
                         <input className={`reps ${reps !== null && reps !== undefined && reps >= exercise.max ? 'hi' : reps !== null && reps !== undefined && reps > 0 && reps < exercise.min ? 'lo' : ''}`} inputMode="numeric" autoComplete="off" placeholder={`${exercise.min}–${exercise.max}`} value={reps ?? ''} onChange={(event) => updateReps(exerciseIndex, set, event.target.value)} disabled={finished} aria-label={`Повторения подхода ${set}`} />
                       </li>

@@ -421,6 +421,11 @@ details.blk[open] .chev{transform:rotate(90deg)}
 .wbtn:hover{border-color:var(--lime)}
 .wbtn small{font:700 10px var(--font-body);color:var(--faint)}
 .wbtn.empty{color:var(--faint)}
+/* подставленный вес: перенос из предыдущего подхода или «прошлый раз» — приглушённый */
+.wbtn.src-carried,.wbtn.src-prev{color:var(--dim);border-style:dashed}
+.wbtn.src-carried small,.wbtn.src-prev small{opacity:.7}
+/* как только значение стало своим (нажали ± или ввели в шторке) — обычный вид */
+.wbtn.src-own{color:var(--text)}
 .reps{
   min-width:0;height:46px;width:100%;border-radius:12px;background:var(--bg);
   border:1px solid var(--line-soft);text-align:center;
