@@ -178,7 +178,7 @@ export function DayScreen({
             <div className="dh-sub">неделя {Math.ceil(day / 3)} · {DOW[(day - 1) % 3]} · {TAGS[(day - 1) % 3]}</div>
             <h1>Тренировка #{day}</h1>
           </div>
-          <button className="dh-prog" onClick={() => onOpenHelp('progress')} aria-label="Справка: прогресс тренировки">{finished ? '✓' : `${stats.done}/${stats.total}`}</button>
+          <button className="dh-prog" onClick={() => onOpenHelp('progress')} aria-label="Справка: прогресс тренировки">{finished ? '✊' : `${stats.done}/${stats.total}`}</button>
         </div>
         <div className="dh-bar"><i style={{ width: `${stats.total ? (stats.done / stats.total) * 100 : 0}%` }} /></div>
       </header>

@@ -379,13 +379,13 @@ details.blk[open] .chev{transform:rotate(90deg)}
 .ex-bin{overflow:hidden;min-height:0}
 .sets{list-style:none;padding-top:11px}
 
-/* шапка колонок сетки подходов (✓ / № / вес / повторы) */
+/* шапка колонок сетки подходов (✊ / № / вес / повторы) */
 .fld-cap{display:grid;grid-template-columns:var(--set-grid);gap:var(--set-gap);align-items:center;padding:2px 2px 8px;border-bottom:1px solid var(--line-soft)}
 .fld-cap .qi{justify-self:center}
 .fc-n{font:800 9px var(--font-body);color:var(--faint);text-align:center}
 .fc-lb{display:flex;align-items:center;justify-content:center;gap:4px;font:800 9px var(--font-body);letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
 
-/* строка подхода: [✓][№][−][вес][+][повторы] */
+/* строка подхода: [✊][№][−][вес][+][повторы] */
 .set-row,.fld-cap{
   display:grid;grid-template-columns:var(--set-grid);gap:var(--set-gap);align-items:center;
 }
@@ -400,9 +400,9 @@ details.blk[open] .chev{transform:rotate(90deg)}
 .check:active{transform:scale(.88)}
 .set-row.done .check{background:var(--success);border-color:var(--success);animation:pop .28s var(--ease)}
 .set-row.done .check::after{
-  content:'✓';position:absolute;inset:0;
+  content:'✊';position:absolute;inset:0;
   display:grid;place-items:center;
-  font:800 16px var(--font-body);color:var(--success-ink);
+  font:400 17px/1 var(--font-body);color:var(--success-ink);
 }
 @keyframes pop{55%{transform:scale(1.18)}}
 .set-n{font:800 11px var(--font-body);color:var(--faint);text-align:center}
