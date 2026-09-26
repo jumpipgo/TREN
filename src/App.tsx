@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { DAYS } from './content/program';
 import { WorkoutProvider, useWorkout } from './domain/WorkoutContext';
-import { dayReps, dayStats, dayTonnage, nextDay, progressionExercises } from './domain/state';
+import { dayIncompleteSets, dayReps, dayStats, dayTonnage, nextDay, progressionExercises } from './domain/state';
 import type { HelpKey, Screen, SummaryData } from './domain/types';
 import { useRestTimer } from './hooks/useRestTimer';
 import { useWakeLock } from './hooks/useWakeLock';
@@ -149,6 +149,7 @@ function WorkoutApp() {
       done: stats.done,
       total: stats.total,
       reps: dayReps(state, currentDay),
+      incompleteSets: dayIncompleteSets(state, currentDay),
       time: record?.startedAt ? formatClock((Date.now() - record.startedAt) / 1000) : '—',
       progression: progressionExercises(state, currentDay),
     };

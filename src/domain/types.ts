@@ -72,6 +72,7 @@ export interface SummaryData {
   done: number;
   total: number;
   reps: number;
+  incompleteSets: number;
   time: string;
   progression: string[];
 }

@@ -608,6 +608,7 @@ body.on-day #tpill{bottom:calc(104px + env(safe-area-inset-bottom))}
 .fin-nums .qm{align-self:center}
 #finTonn{min-width:0;font:700 clamp(34px,12vw,46px)/1 var(--font-display);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
 .fin-nums span{font:800 12px var(--font-body);color:var(--faint);white-space:nowrap}
+.fin-warning{margin:12px 0 0;padding:10px 12px;border:1px solid color-mix(in srgb,var(--warn) 42%,var(--line));border-radius:12px;background:color-mix(in srgb,var(--warn) 10%,transparent);color:var(--warn);font:700 12px/1.45 var(--font-body)}
 .fin-rows{margin:16px 0 4px;border-top:1px solid var(--line-soft)}
 .fin-row{display:flex;justify-content:space-between;gap:12px;min-width:0;padding:11px 2px;border-bottom:1px solid var(--line-soft);font:600 14px var(--font-body);color:var(--dim)}
 .fin-row span{min-width:0;overflow-wrap:anywhere}
