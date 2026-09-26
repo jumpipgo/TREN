@@ -9,6 +9,7 @@
   --r-xl:22px; --r-lg:18px; --r-md:14px; --r-sm:10px;
   --ease:cubic-bezier(.22,1,.36,1);
   --tap:44px;
+  --gutter:16px;
   --shadow:0 18px 48px rgba(0,0,0,.18);
   --lime-soft:color-mix(in srgb,var(--lime) 12%,transparent);
 }
@@ -25,16 +26,16 @@
   --shadow:0 18px 50px rgba(0,0,0,.30);
 }
 [data-theme="light"]{
-  --bg:#F1F1EF; --surface:#FFFFFF; --elevated:#F7F7F5;
-  --line:#D6D6D2; --line-soft:#E6E6E2;
-  --text:#1C2024; --dim:#5D6368; --faint:#8A9095;
-  --lime:#9A7426; --lime-ink:#FFFFFF;
-  --btn-bg:#B49030; --btn-ink:#171207;
-  --blue:#245377; --blue-soft:rgba(36,83,119,.12);
-  --success:#58703A; --success-ink:#FFFFFF;
-  --warn:#9B5E1B;
-  --scrim:rgba(28,32,36,.46);
-  --shadow:0 18px 44px rgba(32,38,44,.12);
+  --bg:#F2F5F4; --surface:#FFFFFF; --elevated:#EAF0F0;
+  --line:#D4DEE0; --line-soft:#E5ECEC;
+  --text:#172229; --dim:#52636B; --faint:#7D8C93;
+  --lime:#6F9412; --lime-ink:#FFFFFF;
+  --btn-bg:#C7F36B; --btn-ink:#132000;
+  --blue:#19758F; --blue-soft:rgba(25,117,143,.12);
+  --success:#2F8B5A; --success-ink:#FFFFFF;
+  --warn:#B56B16;
+  --scrim:rgba(23,34,41,.46);
+  --shadow:0 18px 44px rgba(32,49,54,.12);
 }
 
 /* ============================================================
@@ -74,13 +75,13 @@ a{color:inherit;text-decoration:none}
 .screen{display:none}
 .screen.on{display:block;animation:screen-in .32s var(--ease)}
 @keyframes screen-in{from{opacity:0;transform:translateY(10px)}}
-.wrap{max-width:720px;margin:0 auto;padding:0 16px}
-@media(min-width:768px){.wrap{max-width:760px}}
+.wrap{max-width:720px;margin:0 auto;padding:0 var(--gutter)}
+@media(min-width:768px){:root{--gutter:24px}.wrap{max-width:760px}}
 
 /* ============================================================
    ВЕРХНЯЯ НАВИГАЦИЯ (Home/Cycle) + нижняя пилюля
    ============================================================ */
-.top{display:flex;align-items:center;justify-content:space-between;padding:18px 20px 4px}
+.top{display:flex;align-items:center;justify-content:space-between;padding:18px var(--gutter) 4px}
 .brand{display:flex;align-items:baseline;gap:10px}
 .brand-button{border:0;padding:0;text-align:left;cursor:pointer}
 .brand-button:hover b{color:var(--lime)}
@@ -124,7 +125,7 @@ body.on-day #nav{transform:translateX(-50%) translateY(130px);opacity:0;pointer-
    HOME — кольцо цикла + «Сегодня»
    ============================================================ */
 .hero{
-  display:flex;flex-direction:column;align-items:center;padding:32px 20px 14px;
+  display:flex;flex-direction:column;align-items:center;padding:32px var(--gutter) 14px;
   background:var(--bg);
 }
 .ring{position:relative;width:min(224px,100%);height:auto;aspect-ratio:1;filter:drop-shadow(0 12px 24px color-mix(in srgb,var(--lime) 8%,transparent))}
@@ -146,7 +147,7 @@ body.on-day #nav{transform:translateX(-50%) translateY(130px);opacity:0;pointer-
 .seg.cur{stroke:var(--blue);opacity:.7;stroke-width:12;animation:seg-pulse 2.2s ease-in-out infinite}
 @keyframes seg-pulse{50%{opacity:.95;stroke-width:13}}
 
-.today{padding:24px 20px 10px;max-width:560px;margin:0 auto;width:100%}
+.today{padding:24px var(--gutter) 10px;max-width:560px;margin:0 auto;width:100%}
 .t-title{font:700 28px/1.15 var(--font-display);letter-spacing:-.03em;margin:10px 0 6px}
 .t-tag{font:700 12px var(--font-body);color:var(--dim);letter-spacing:.02em}
 .t-goal{color:var(--dim);font:500 15px/1.55 var(--font-body);margin-top:10px}
@@ -162,7 +163,7 @@ body.on-day #nav{transform:translateX(-50%) translateY(130px);opacity:0;pointer-
 .btn-primary svg{width:16px;height:16px}
 .btn-primary small{font:700 12px;opacity:.72}
 
-.stats{display:flex;margin:18px 20px 0;border:1px solid var(--line-soft);border-radius:18px;background:var(--surface);overflow:hidden;max-width:560px;box-shadow:var(--shadow)}
+.stats{display:flex;width:calc(100% - (var(--gutter) * 2));margin:18px auto 0;border:1px solid var(--line-soft);border-radius:18px;background:var(--surface);overflow:hidden;max-width:560px;box-shadow:var(--shadow)}
 .st3{min-width:0;padding:15px 8px;text-align:center}
 .st3:first-child{flex:1.35}
 .st3{flex:1}
@@ -171,7 +172,7 @@ body.on-day #nav{transform:translateX(-50%) translateY(130px);opacity:0;pointer-
 .st3 span{font:800 9px var(--font-body);letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-top:2px;overflow-wrap:anywhere}
 .st3b{justify-content:center;flex-wrap:wrap;row-gap:2px;text-align:center}
 
-.week{padding:22px 20px 8px;max-width:560px;margin:0 auto;width:100%}
+.week{padding:22px var(--gutter) 8px;max-width:560px;margin:0 auto;width:100%}
 .wk-chips{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px;margin-top:10px}
 .wd{
   min-width:0;height:56px;border-radius:14px;
@@ -188,7 +189,7 @@ body.on-day #nav{transform:translateX(-50%) translateY(130px);opacity:0;pointer-
 .wd.now b{color:var(--blue)}
 
 /* milestone */
-.done-hero{padding:26px 20px;max-width:560px;margin:0 auto}
+.done-hero{padding:26px var(--gutter);max-width:560px;margin:0 auto}
 .done-hero h2{font:700 24px/1.25 var(--font-display);margin:10px 0 12px}
 .done-hero p{color:var(--dim);font:500 15px/1.6}
 .done-hero p+p{margin-top:10px}
@@ -203,10 +204,10 @@ blockquote.q{
 /* ============================================================
    CYCLE — карта 12 тренировок
    ============================================================ */
-.c-head{padding:22px 20px 8px}
+.c-head{padding:22px var(--gutter) 8px;max-width:720px;margin:0 auto}
 .c-head h1{font:700 26px var(--font-display);margin-top:8px}
 .c-head p{color:var(--dim);font:600 13px;margin-top:4px}
-details.blk{margin:14px 16px;border:1px solid var(--line-soft);border-radius:16px;background:var(--surface);overflow:hidden;box-shadow:var(--shadow)}
+details.blk{width:calc(100% - (var(--gutter) * 2));max-width:720px;margin:14px auto;border:1px solid var(--line-soft);border-radius:16px;background:var(--surface);overflow:hidden;box-shadow:var(--shadow)}
 details.blk summary{
   list-style:none;display:flex;align-items:center;gap:10px;
   padding:15px 16px;font:800 14px var(--font-body);color:var(--dim);cursor:pointer;
@@ -221,12 +222,12 @@ details.blk[open] .chev{transform:rotate(90deg)}
 .blk-body ul{margin:8px 0;padding-left:20px}
 .blk-body li+li{margin-top:6px}
 
-.wk-label{display:flex;align-items:center;gap:12px;padding:22px 20px 8px}
+.wk-label{display:flex;align-items:center;gap:12px;padding:22px var(--gutter) 8px;max-width:720px;margin:0 auto}
 .wk-label b{font:700 13px var(--font-display);letter-spacing:.06em;text-transform:uppercase;color:var(--dim)}
 .wk-label i{flex:1;height:1px;background:var(--line-soft)}
 .crow{
   display:grid;grid-template-columns:46px minmax(0,1fr) auto;gap:12px;align-items:center;
-  margin:6px 16px;padding:14px 14px;border:1px solid var(--line-soft);border-radius:16px;
+  width:calc(100% - (var(--gutter) * 2));max-width:720px;margin:6px auto;padding:14px;border:1px solid var(--line-soft);border-radius:16px;
   background:var(--surface);box-shadow:0 8px 24px rgba(0,0,0,.10);cursor:pointer;
   transition:background .15s,border-color .2s,transform .15s,box-shadow .2s;
 }
@@ -248,7 +249,7 @@ details.blk[open] .chev{transform:rotate(90deg)}
 .ck svg{width:13px;height:13px}
 .crow .go{color:var(--faint)}
 
-.foot-note{padding:22px 20px 30px;color:var(--faint);font:400 12.5px/1.6 var(--font-body)}
+.foot-note{max-width:720px;margin:0 auto;padding:22px var(--gutter) 30px;color:var(--faint);font:400 12.5px/1.6 var(--font-body)}
 .foot-note em{display:block;margin-bottom:14px}
 .reset-line{margin-top:6px}
 .txt-btn{font:700 13px var(--font-body);color:var(--warn);padding:8px 0}
@@ -267,7 +268,7 @@ details.blk[open] .chev{transform:rotate(90deg)}
   border-bottom:1px solid var(--line-soft);
   box-shadow:0 10px 30px rgba(0,0,0,.08);
 }
-.dh-in{max-width:720px;margin:0 auto;padding:13px 16px 14px;display:grid;grid-template-columns:42px minmax(0,1fr) auto;gap:11px;align-items:center}
+.dh-in{max-width:720px;margin:0 auto;padding:13px var(--gutter) 14px;display:grid;grid-template-columns:42px minmax(0,1fr) auto;gap:11px;align-items:center}
 .dh-in>div{min-width:0}
 .dh-sub{font:800 10px var(--font-body);letter-spacing:.14em;text-transform:uppercase;color:var(--faint);overflow-wrap:anywhere}
 .dh-in h1{font:700 21px/1.1 var(--font-display);letter-spacing:-.02em;margin-top:4px;overflow-wrap:anywhere}
@@ -277,7 +278,7 @@ details.blk[open] .chev{transform:rotate(90deg)}
 .dh-bar i{position:absolute;inset:0;right:auto;width:0%;background:var(--blue);transition:width .45s var(--ease);border-radius:0 2px 2px 0;box-shadow:0 0 12px color-mix(in srgb,var(--blue) 30%,transparent)}
 
 #dstrip{
-  display:flex;gap:7px;overflow-x:auto;padding:12px 16px 10px;
+  display:flex;gap:7px;overflow-x:auto;padding:12px var(--gutter) 10px;
   scrollbar-width:none;max-width:720px;margin:0 auto;scroll-snap-type:x proximity;
 }
 #dstrip::-webkit-scrollbar{display:none}
@@ -294,11 +295,11 @@ details.blk[open] .chev{transform:rotate(90deg)}
 .dch.part{border-color:var(--lime);color:var(--lime);background:var(--lime-soft)}
 .dch.cur{border-color:var(--blue);color:var(--text);background:var(--blue-soft);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--blue) 20%,transparent)}
 
-.goal-line{margin:4px 16px 0;padding:14px 16px;display:flex;gap:12px;align-items:flex-start;background:var(--surface);border:1px solid var(--line-soft);border-radius:16px;box-shadow:var(--shadow)}
+.goal-line{width:calc(100% - (var(--gutter) * 2));max-width:720px;margin:4px auto 0;padding:14px 16px;display:flex;gap:12px;align-items:flex-start;background:var(--surface);border:1px solid var(--line-soft);border-radius:16px;box-shadow:var(--shadow)}
 .goal-line p{min-width:0;flex:1 1 auto;color:var(--dim);font:500 14.5px/1.5 var(--font-body);max-width:56ch;overflow-wrap:anywhere}
 
 /* карточка упражнения */
-#exList{padding:14px 16px 6px;max-width:720px;margin:0 auto}
+#exList{padding:14px var(--gutter) 6px;max-width:720px;margin:0 auto}
 .ex{
   --set-grid:36px 16px 36px minmax(56px,1fr) 36px 64px;
   --set-gap:6px;
@@ -413,7 +414,7 @@ details.blk[open] .chev{transform:rotate(90deg)}
 .reps.hi{border-color:var(--success);color:var(--success);background:color-mix(in srgb,var(--success) 12%,transparent)}
 .reps.lo{border-color:var(--warn);color:var(--warn);background:color-mix(in srgb,var(--warn) 8%,transparent)}
 
-.day-foot{max-width:720px;margin:0 auto;padding:14px 20px 30px;color:var(--faint);font:500 11.5px/1.7 var(--font-body);text-align:center}
+.day-foot{max-width:720px;margin:0 auto;padding:14px var(--gutter) 30px;color:var(--faint);font:500 11.5px/1.7 var(--font-body);text-align:center}
 
 /* ============================================================
    НОВОЕ: справка по полям — «?»-чипы + содержимое шита
@@ -459,7 +460,7 @@ details.blk[open] .chev{transform:rotate(90deg)}
 /* ============================================================
    PROFILE
    ============================================================ */
-.profile-head{max-width:720px;margin:0 auto;padding:24px 16px 8px}
+.profile-head{max-width:720px;margin:0 auto;padding:24px var(--gutter) 8px}
 .profile-head h1{font:700 28px/1.15 var(--font-display);letter-spacing:-.03em;margin-top:8px;overflow-wrap:anywhere}
 .profile-head p{max-width:100%;color:var(--dim);font:600 13px;margin-top:5px;overflow-wrap:anywhere}
 .profile-content{padding-bottom:24px}

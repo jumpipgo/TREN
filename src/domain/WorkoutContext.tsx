@@ -11,7 +11,7 @@ import { loadState, saveState } from './storage';
 import { workoutReducer } from './state';
 import type { AppState, Theme } from './types';
 
-interface WorkoutContextValue {
+interface MesoContextValue {
   state: AppState;
   recovered: boolean;
   setWeight: (day: number, exercise: number, set: number, weight: number | null) => void;
@@ -33,7 +33,7 @@ const initial = typeof window === 'undefined'
   ? { state: { days: {}, theme: 'dark' as const }, recovered: false }
   : loadState(window.localStorage);
 
-const WorkoutContext = createContext<WorkoutContextValue | null>(null);
+const MesoContext = createContext<MesoContextValue | null>(null);
 
 export function WorkoutProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(workoutReducer, initial.state);
@@ -41,7 +41,7 @@ export function WorkoutProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     saveState(window.localStorage, state);
     document.documentElement.dataset.theme = state.theme;
-    const themeColor = state.theme === 'dark' ? '#000000' : '#F1F1EF';
+    const themeColor = state.theme === 'dark' ? '#000000' : '#F2F5F4';
     document.querySelector('meta[name="theme-color"]')?.setAttribute('content', themeColor);
   }, [state]);
 
@@ -72,11 +72,11 @@ export function WorkoutProvider({ children }: { children: ReactNode }) {
     [state, setWeight, setReps, toggleSet, finishDay, resetDays, replaceState, setTheme],
   );
 
-  return <WorkoutContext.Provider value={value}>{children}</WorkoutContext.Provider>;
+  return <MesoContext.Provider value={value}>{children}</MesoContext.Provider>;
 }
 
-export function useWorkout(): WorkoutContextValue {
-  const context = useContext(WorkoutContext);
-  if (!context) throw new Error('useWorkout must be used inside WorkoutProvider');
+export function useWorkout(): MesoContextValue {
+  const context = useContext(MesoContext);
+  if (!context) throw new Error('useWorkout must be used inside MesoContext');
   return context;
 }
