@@ -13,7 +13,7 @@ import type { HelpKey } from '../domain/types';
 import { formatWeight, vibrate } from '../utils/format';
 import { inferMuscle } from '../utils/muscles';
 import { PlayIcon, BackIcon } from './Icons';
-import { NumberWheelField } from './NumberWheel';
+import { WheelStepper } from './NumberWheel';
 
 interface DayScreenProps {
   visible: boolean;
@@ -261,7 +261,7 @@ export function DayScreen({
                         <button className="st" onClick={() => stepWeight(exerciseIndex, set, -2.5)} disabled={finished} aria-label="Минус 2,5 кг">−</button>
                         <button className={`wbtn src-${source} ${weight ? '' : 'empty'}`} data-w={weight ?? ''} onClick={() => onOpenWeight(exerciseIndex, set, weight)} disabled={finished} aria-label={`Вес подхода ${set}`}>{weight ? formatWeight(weight) : '—'}{weight ? <small>кг</small> : null}</button>
                         <button className="st" onClick={() => stepWeight(exerciseIndex, set, 2.5)} disabled={finished} aria-label="Плюс 2,5 кг">+</button>
-                        <NumberWheelField
+                        <WheelStepper
                           className="reps"
                           value={reps ?? null}
                           onChange={(next) => updateReps(exerciseIndex, set, String(next))}
@@ -270,9 +270,11 @@ export function DayScreen({
                           step={1}
                           placeholder={`${exercise.min}–${exercise.max}`}
                           ariaLabel={`Повторения подхода ${set}`}
+                          decreaseLabel={`Уменьшить повторы подхода ${set}`}
+                          increaseLabel={`Увеличить повторы подхода ${set}`}
                           stateClass={(v) => (v == null ? '' : v >= exercise.max ? 'hi' : v < exercise.min ? 'lo' : '')}
                           onOpenChoices={() => setRepsChoice({ exercise: exerciseIndex, set, min: exercise.min, max: exercise.max })}
-                          onFirstDrag={() => onToast('Проведи по полю: вверх — больше, вниз — меньше')}
+                          onFirstDrag={() => onToast('Проведи по числу: вверх — больше, вниз — меньше')}
                         />
                       </li>
                     );
