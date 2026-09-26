@@ -2,14 +2,11 @@
    ТОКЕНЫ — единственный источник правды по дизайну
    ============================================================ */
 
-/* Правило иконок (осознанное, а не небрежность):
-   — Частые и навигационные действия: штриховые SVG в currentColor,
-     единый viewBox 24, толщина 2. Монохромные, наследуют тему и
-     одинаковы при любом масштабе экрана.
-   — Редкие и справочные метки в профиле (данные, безопасность, установка,
-     сброс) и разовые кнопки в итогах: цветные эмодзи класса .emo.
-     Они не подчиняются цвету текста, поэтому живут отдельно.
-   — Смешивать оба стиля внутри одного блока нельзя. */
+/* Правило иконок — одно на всё приложение:
+   - частое и навигационное: штриховой SVG, viewBox 24, толщина 2, currentColor
+     (следует за темой, одинаков при любом масштабе экрана);
+   - метки и данные — текст с токенами, без отдельной графики;
+   - смешивать стили внутри одного блока нельзя. */
 :root{
   --font-body:'Manrope',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
   --font-display:'Unbounded','Manrope',ui-sans-serif,system-ui,sans-serif;
@@ -107,7 +104,35 @@ a{color:inherit;text-decoration:none}
 .access-error{padding:10px 12px;border:1px solid color-mix(in srgb,var(--warn) 42%,var(--line));border-radius:12px;background:color-mix(in srgb,var(--warn) 10%,transparent);color:var(--warn);font-weight:700;font-size:var(--fs-12);line-height:1.4;font-family:var(--font-body)}
 .access-submit{min-height:54px;margin-top:6px;border-radius:14px;background:var(--btn-bg);color:var(--btn-ink);font-weight:800;font-size:var(--fs-15);font-family:var(--font-body);transition:transform .15s var(--ease)}
 .access-submit:active{transform:scale(.98)}
+.access-submit:disabled{opacity:.35;pointer-events:none}
+.access-submit.ghost{background:transparent;border:1px solid var(--line);color:var(--dim);margin-top:10px}
 .access-hint{text-align:center;color:var(--faint);font-weight:500;font-size:var(--fs-11);line-height:1.4;font-family:var(--font-body)}
+
+/* --- PIN: свой пульт вместо системной клавиатуры --- */
+.pin-hidden{
+  position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+  overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;opacity:0;
+}
+.pin-dots{display:flex;justify-content:center;gap:12px;margin:20px 0 18px}
+.pin-dots span{
+  width:14px;height:14px;border-radius:50%;
+  border:1.5px solid var(--line);background:var(--bg);
+  transition:background .16s,border-color .16s,transform .16s var(--ease);
+}
+.pin-dots span.on{background:var(--lime);border-color:var(--lime);transform:scale(1.08)}
+.pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%;max-width:340px;margin:0 auto}
+/* flex, а не place-items:center: как grid-item клавиша тянется на всю
+   ширину колонки, а центрируется уже внутри себя */
+.pin-key{
+  height:60px;border-radius:var(--r-lg);background:var(--elevated);
+  border:1px solid var(--line-soft);color:var(--text);
+  font-weight:700;font-size:var(--fs-24);font-family:var(--font-display);
+  display:flex;align-items:center;justify-content:center;
+  transition:transform .1s,background .16s,border-color .16s;
+}
+.pin-key:active{transform:scale(.93);background:var(--lime-soft);border-color:var(--lime)}
+.pin-del{color:var(--dim)}
+.pin-gap{visibility:hidden}
 
 .screen{display:none}
 .screen.on{display:block;animation:screen-in .32s var(--ease)}
@@ -132,7 +157,6 @@ a{color:inherit;text-decoration:none}
   transition:transform .15s,color .2s,border-color .2s;
 }
 .icon-btn:active{transform:scale(.92)}
-.icon-btn .emo{font-size:var(--fs-17);line-height:1}
 
 #nav{
   position:fixed;left:50%;bottom:calc(14px + env(safe-area-inset-bottom));
@@ -199,7 +223,6 @@ body.on-day #nav{transform:translateX(-50%) translateY(130px);opacity:0;pointer-
 }
 .btn-primary:active{transform:scale(.97)}
 .btn-primary svg{width:16px;height:16px}
-.btn-primary .emo,.btn-ghost .emo{font-size:var(--fs-15);line-height:1;opacity:.9}
 .btn-primary small{font-weight:700;font-size:var(--fs-12);opacity:.72}
 
 .stats{display:flex;width:calc(100% - (var(--gutter) * 2));margin:14px auto 0;border:1px solid var(--line-soft);border-radius:16px;background:var(--surface);overflow:hidden;max-width:560px;box-shadow:var(--shadow)}
@@ -459,6 +482,60 @@ details.blk[open] .chev{transform:rotate(90deg)}
 .reps.hi{border-color:var(--success);color:var(--success);background:color-mix(in srgb,var(--success) 12%,transparent)}
 .reps.lo{border-color:var(--warn);color:var(--warn);background:color-mix(in srgb,var(--warn) 8%,transparent)}
 
+/* Поле-«колесо»: то же поле повторов, но со значением жестом и без клавиатуры */
+.wheel{
+  position:relative;min-width:0;width:100%;display:grid;place-items:center;
+  user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;
+  touch-action:pan-y;cursor:ns-resize;outline:none;
+}
+.wheel:focus-visible{outline:2px solid var(--lime);outline-offset:2px}
+.wheel-val{
+  pointer-events:none;line-height:1;
+  font-variant-numeric:tabular-nums;
+}
+/* заполненное значение — крупно, как было у обычного поля;
+   пустое — тихая подсказка диапазона, как раньше placeholder */
+.wheel-own .wheel-val{font-family:var(--font-display);font-weight:600;font-size:clamp(var(--fs-14),2.8vw,var(--fs-17));color:inherit}
+.wheel:not(.wheel-own) .wheel-val{font-family:var(--font-body);font-weight:600;font-size:var(--fs-11);letter-spacing:.02em;color:var(--faint)}
+/* тонкая метка-приглашение под полем, только пока значение не задано */
+.wheel::after{
+  content:'';position:absolute;left:50%;bottom:5px;width:14px;height:2px;border-radius:2px;
+  transform:translateX(-50%);background:var(--faint);opacity:0;
+  pointer-events:none;transition:opacity .2s;
+}
+.wheel:not(.wheel-own)::after{opacity:.5}
+.wheel-touch:not(.wheel-own)::after{opacity:.8}
+
+/* Быстрый выбор повторов */
+.choice{
+  position:fixed;inset:0;z-index:80;display:flex;align-items:flex-end;
+  background:var(--scrim);animation:fade .18s var(--ease);
+}
+.choice-panel{
+  width:100%;padding:18px var(--gutter) calc(18px + env(safe-area-inset-bottom));
+  border-radius:var(--r-xl) var(--r-xl) 0 0;background:var(--surface);
+  border-top:1px solid var(--line);box-shadow:0 -20px 60px rgba(0,0,0,.4);
+  animation:slide-up .22s var(--ease);
+}
+.choice-head b{display:block;font-size:var(--fs-17);font-weight:700}
+.choice-head small{display:block;margin-top:3px;color:var(--faint);font-size:var(--fs-12)}
+.choice-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(56px,1fr));gap:8px;margin-top:16px}
+.choice-btn{
+  min-height:52px;border-radius:var(--r-md);background:var(--bg);
+  border:1px solid var(--line-soft);color:var(--text);
+  font-weight:700;font-size:var(--fs-17);font-family:var(--font-display);
+  transition:transform .12s,background .18s,border-color .18s;
+}
+.choice-btn:active{transform:scale(.94)}
+.choice-btn.top{border-color:color-mix(in srgb,var(--success) 40%,var(--line))}
+.choice-btn.active{background:var(--btn-bg);color:var(--btn-ink);border-color:var(--btn-bg)}
+.choice-cancel{
+  width:100%;min-height:46px;margin-top:12px;border-radius:var(--r-md);
+  color:var(--dim);font-weight:700;font-size:var(--fs-15);
+}
+@keyframes fade{from{opacity:0}}
+@keyframes slide-up{from{transform:translateY(16px);opacity:0}}
+
 .day-foot{max-width:720px;margin:0 auto;padding:14px var(--gutter) 30px;color:var(--faint);font-weight:500;font-size:var(--fs-12);line-height:1.7;font-family:var(--font-body);text-align:center}
 
 /* ============================================================
@@ -526,10 +603,13 @@ details.blk[open] .chev{transform:rotate(90deg)}
 .profile-row span{min-width:0}
 .profile-row b{display:block;min-width:0;font-weight:700;font-size:var(--fs-15);font-family:var(--font-body);overflow-wrap:anywhere}
 .profile-row small{display:block;margin-top:2px;color:var(--faint);font-weight:500;font-size:var(--fs-12);overflow-wrap:anywhere}
-.profile-row i{color:var(--faint);font-style:normal;font-size:var(--fs-20)}
-/* эмодзи в строках профиля: не подчиняются цвету текста, только размер */
-.emo{font-family:'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif;font-size:var(--fs-17);line-height:1;filter:saturate(.85)}
-.danger-row .emo,.emo.danger{filter:saturate(.7)}
+/* Значок строки профиля — штриховой SVG в currentColor, как вся навигация.
+   Раньше здесь стояли цветные эмодзи: они не реагировали на смену темы
+   и читались как чужеродные пятна в углу. */
+.profile-row i{color:var(--faint);font-style:normal;display:grid;place-items:center;flex:0 0 auto}
+.profile-row i svg{width:19px;height:19px}
+.btn-primary .row-ico,.btn-ghost .row-ico{color:currentColor;display:grid;place-items:center;flex:0 0 auto}
+.btn-primary .row-ico svg,.btn-ghost .row-ico svg{width:16px;height:16px}
 .profile-row:active{opacity:.7}
 .profile-row.danger b{color:var(--warn)}
 .install-card p{margin:0 0 14px;color:var(--dim);font-weight:500;font-size:var(--fs-14);line-height:1.5;font-family:var(--font-body)}
@@ -636,13 +716,26 @@ body.on-day #tpill{bottom:calc(104px + env(safe-area-inset-bottom))}
 .sh-title{font-weight:700;font-size:var(--fs-17);font-family:var(--font-display);letter-spacing:-.02em;margin-bottom:2px}
 .sh-sub{font-weight:600;font-size:var(--fs-12);font-family:var(--font-body);color:var(--faint);margin-bottom:16px}
 
-#wsIn{
-  display:block;width:100%;max-width:240px;margin:6px auto 18px;
-  background:transparent;border:none;border-bottom:2px solid var(--line);
-  font-weight:600;font-size:var(--fs-46);font-family:var(--font-display);text-align:center;color:var(--text);
-  font-variant-numeric:tabular-nums;padding:2px 0 8px;
+/* Циферблат веса: значение колесом, без клавиатуры.
+   Раньше здесь был input, который поднимал системную клавиатуру. */
+.ws-dial{
+  width:100%;max-width:240px;margin:6px auto 18px;padding:6px 0 10px;
+  display:flex;align-items:baseline;justify-content:center;gap:6px;
+  border-bottom:2px solid var(--line);
+  cursor:ns-resize;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;
+  touch-action:pan-y;outline:none;
+  transition:border-color .2s;
 }
-#wsIn:focus{outline:none;border-color:var(--lime)}
+.ws-dial:focus-visible{outline:2px solid var(--lime);outline-offset:4px}
+.ws-dial b{
+  font-weight:600;font-size:var(--fs-46);line-height:1;font-family:var(--font-display);
+  color:var(--text);font-variant-numeric:tabular-nums;pointer-events:none;
+}
+.ws-dial small{font-weight:700;font-size:var(--fs-12);font-family:var(--font-body);color:var(--faint);pointer-events:none}
+/* пустое значение — тихая подсказка, а не гигантское тире */
+.ws-dial:not(.wheel-own) b{font-size:var(--fs-14);font-family:var(--font-body);font-weight:700;letter-spacing:.02em;color:var(--faint)}
+.ws-dial:not(.wheel-own) small{font-size:var(--fs-11)}
+.ws-dial.wheel-own{border-color:var(--lime)}
 .ws-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
 .ws-btn{
   height:52px;border-radius:14px;background:var(--elevated);
@@ -674,7 +767,6 @@ body.on-day #tpill{bottom:calc(104px + env(safe-area-inset-bottom))}
 .fin-pr .label{display:block;margin-bottom:8px}
 .fin-pr .pr{margin:0 6px 6px 0;font-size:var(--fs-12);padding:6px 12px}
 .sh-actions{display:flex;gap:10px;margin-top:14px}
-.sh-actions .emo{margin-right:2px}
 .btn-ghost{
   flex:1;min-width:0;height:52px;border-radius:14px;border:1px solid var(--line);
   font-weight:800;font-size:var(--fs-14);font-family:var(--font-body);color:var(--dim);white-space:nowrap;

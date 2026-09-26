@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { DAYS, DOW, OUTRO, TAGS } from '../content/program';
 import { useWorkout } from '../domain/WorkoutContext';
+import { ThemeIcon } from './Icons';
 import { allDone, cycleTotals, dayStats, nextDay } from '../domain/state';
 import { formatKg } from '../utils/format';
 
@@ -95,7 +96,7 @@ export function HomeScreen({ visible, onOpenDay, onOpenCycle, onToast, onCelebra
           }}
           aria-label="Переключить тему"
         >
-          <span className="emo" aria-hidden="true">{state.theme === 'dark' ? '🌙' : '☀️'}</span>
+          <ThemeIcon theme={state.theme} />
         </button>
       </header>
       <div id="homeBody">
