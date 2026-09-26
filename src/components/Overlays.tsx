@@ -76,11 +76,12 @@ export function WeightSheet({ context, onClose, onSave, onApplyAll }: { context:
       >
         <b>{value != null ? shown : 'крутите'}</b>
         {value != null && <small>кг</small>}
-        <span className="wheel-hint" aria-hidden="true">
-          <svg className="up" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 19V6M6 12l6-6 6 6" /></svg>
-          <svg className="down" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v13M6 12l6 6 6-6" /></svg>
-          <b>вверх — больше</b>
-        </span>
+        {dragging && (
+          <span className="step-drag" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"><path d="M12 19V6M6 12l6-6 6 6" /></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v13M6 12l6 6 6-6" /></svg>
+          </span>
+        )}
       </div>
       <div className="ws-grid">
         {[-5, -2.5, -1.25, 1.25, 2.5, 5].map((delta) => <button key={delta} className="ws-btn" onClick={() => change(delta)}>{delta > 0 ? '+' : ''}{String(delta).replace('.', ',')}</button>)}
