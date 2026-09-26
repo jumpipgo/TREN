@@ -247,6 +247,20 @@ export function nextDay(state: AppState): number | null {
 
 export const allDone = (state: AppState) => nextDay(state) === null;
 
+/**
+ * Вес для подсказки в поле ввода: ближайший уже заполненный вес выше по списку
+ * внутри того же упражнения (подходы идут 1, 2, 3 — берём последний непустой назад).
+ * Это ровно тот вес, который пользователь поставил в предыдущей строке,
+ * поэтому переносить его дальше безопасно.
+ */
+export function carryWeight(state: AppState, day: number, exercise: number, set: number): number | null {
+  for (let index = set - 1; index >= 1; index -= 1) {
+    const weight = getSet(state, day, exercise, index)?.w;
+    if (weight != null && weight > 0) return weight;
+  }
+  return null;
+}
+
 export function lastPerf(state: AppState, name: string, beforeDay: number): LastPerformance | null {
   for (let dayNumber = beforeDay - 1; dayNumber >= 1; dayNumber -= 1) {
     const programDay = DAYS[dayNumber - 1];

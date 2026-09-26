@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { DAYS, DOW, TAGS } from '../content/program';
 import { useWorkout } from '../domain/WorkoutContext';
 import {
+  carryWeight,
   dayStats,
   getSet,
   lastPerf,
@@ -99,8 +100,8 @@ export function DayScreen({
     const record = getSet(state, day, exercise, set);
     const previous = lastPerf(state, program.ex[exercise].name, day);
     const previousWeight = previous?.pairs[set - 1]?.w ?? previous?.w ?? null;
-    // The weight button displays the previous performance as a fallback; persist it on completion too.
-    const currentWeight = record?.w ?? previousWeight;
+    // The weight button displays a fallback (carry-over or previous performance); persist it on completion too.
+    const currentWeight = record?.w ?? carryWeight(state, day, exercise, set) ?? previousWeight;
     const currentReps = record?.r ?? null;
     const nextDone = !record?.done;
     toggleSet(day, exercise, set, currentWeight, currentReps);
@@ -125,8 +126,11 @@ export function DayScreen({
 
   function stepWeight(exercise: number, set: number, delta: number) {
     const record = getSet(state, day, exercise, set);
-    const previous = Number(record?.w ?? 0);
-    const next = Math.max(0, Number((previous + delta).toFixed(2)));
+    const previous = lastPerf(state, program.ex[exercise].name, day);
+    const previousWeight = previous?.pairs[set - 1]?.w ?? previous?.w ?? null;
+    // +/- must continue from the value shown in the field, not from zero.
+    const base = record?.w ?? carryWeight(state, day, exercise, set) ?? previousWeight ?? 0;
+    const next = Math.max(0, Number((base + delta).toFixed(2)));
     setWeight(day, exercise, set, next || null);
   }
 
@@ -236,7 +240,7 @@ export function DayScreen({
                     const set = index + 1;
                     const record = getSet(state, day, exerciseIndex, set);
                     const previousWeight = previous?.pairs[index]?.w ?? previous?.w ?? null;
-                    const weight = record?.w ?? previousWeight;
+                    const weight = record?.w ?? carryWeight(state, day, exerciseIndex, set) ?? previousWeight;
                     const reps = record?.r;
                     const done = Boolean(record?.done);
                     const currentSet = !done && active && records.findIndex((item) => !item?.done) === index;
