@@ -574,51 +574,20 @@ body.on-day #tpill{bottom:calc(104px + env(safe-area-inset-bottom))}
   position:fixed;inset:0;z-index:100;display:grid;place-items:center;
   padding:calc(16px + env(safe-area-inset-top)) var(--gutter) calc(16px + env(safe-area-inset-bottom));
   background:rgba(0,0,0,.82);opacity:0;visibility:hidden;pointer-events:none;
-  transition:opacity .2s,visibility .2s,background .2s;
+  transition:opacity .2s,visibility .2s;
 }
-/* когда окно уведено в сторону, подложка становится легче — видно упражнение */
-.yt-modal.floating{background:rgba(0,0,0,.38)}
 .yt-modal.on{opacity:1;visibility:visible;pointer-events:auto}
 .yt-dialog{
-  position:relative;width:min(100%,960px);max-height:100%;
+  position:relative;width:min(100%,960px);max-height:100%;overflow:auto;
   background:var(--surface);border:1px solid var(--line);border-radius:20px;
   box-shadow:0 24px 80px rgba(0,0,0,.55);
-  overscroll-behavior:contain;
 }
-/* в компактном режиме окно не должно перекрывать весь экран — сбоку видна карточка упражнения */
-/* на телефоне small заметно меньше wide — иначе переключатель бессмыслен */
-.yt-dialog.small{width:min(58vw,300px)}
-.yt-dialog.wide{width:min(100%,calc(100vw - 24px))}
-.yt-drag{
-  display:flex;align-items:center;gap:8px;
-  height:44px;padding:0 132px 0 12px;cursor:grab;
-  touch-action:none;user-select:none;-webkit-user-select:none;
-  border-bottom:1px solid var(--line-soft);
+.yt-close{
+  position:absolute;top:8px;right:8px;z-index:2;width:48px;height:48px;
+  display:grid;place-items:center;border-radius:50%;background:rgba(0,0,0,.72);
+  color:#fff;font:400 30px/1 var(--font-body);backdrop-filter:blur(10px);
 }
-.yt-drag:active{cursor:grabbing}
-.yt-grip{
-  width:22px;height:8px;flex:0 0 auto;
-  background:radial-gradient(circle,var(--faint) 1.4px,transparent 1.5px) 0 0/7px 8px repeat-x;
-}
-.yt-hint{
-  min-width:0;overflow:hidden;white-space:nowrap;
-  color:var(--faint);font:600 10px var(--font-body);letter-spacing:.04em;
-}
-.yt-hint i,.yt-hint b{font-style:normal;font-weight:inherit}
-.yt-hint b{display:none}
-.yt-dialog.wide .yt-hint b{display:inline}
-.yt-dialog.wide .yt-hint i{display:none}
-.yt-actions{
-  position:absolute;top:4px;right:6px;z-index:3;display:flex;align-items:center;gap:6px;
-}
-.yt-size,.yt-close{
-  width:34px;height:34px;display:grid;place-items:center;
-  border-radius:50%;background:rgba(0,0,0,.66);color:#fff;
-  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
-}
-.yt-size{font:600 15px/1 var(--font-body)}
-.yt-close{width:40px;height:40px;font:400 24px/1 var(--font-body)}
-.yt-size:active,.yt-close:active{transform:scale(.9)}
+.yt-close:active{transform:scale(.92)}
 .yt-frame{position:relative;width:100%;aspect-ratio:16/9;background:#000;overflow:hidden;border-radius:0 0 20px 20px}
 .yt-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
 .sheet{
@@ -750,7 +719,7 @@ body.on-day #toast{top:calc(78px + env(safe-area-inset-top))}
   *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
 }
 @media print{
-  #nav,#sbar,#tpill,#scrim,.sheet,#toast,.yt-modal{display:none!important}
+  #nav,#sbar,#tpill,#scrim,.sheet,#toast{display:none!important}
   .qi,.qm{display:none!important} /* справка — интерактив; подписи колонок остаются */
   body{background:#fff;color:#000;padding:0}
   .day-head{position:static;background:#fff}
