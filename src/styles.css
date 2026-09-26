@@ -620,6 +620,13 @@ body.on-day #tpill{bottom:calc(104px + env(safe-area-inset-bottom))}
   transition:transform .12s;
 }
 .ws-btn:active{transform:scale(.93)}
+.ws-all{
+  width:100%;min-height:46px;margin:0 0 12px;padding:0 14px;
+  border:1px solid var(--lime);border-radius:14px;
+  background:var(--lime-soft);color:var(--lime);
+  font:800 13px/1.3 var(--font-body);text-align:center;
+}
+.ws-all:active{transform:scale(.98)}
 .ws-lbl{text-align:center;font:800 10px var(--font-body);letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-bottom:10px}
 .sheet .btn-primary{margin-top:6px}
 

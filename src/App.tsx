@@ -5,7 +5,7 @@ import { dayIncompleteSets, dayReps, dayStats, dayTonnage, nextDay, progressionE
 import type { HelpKey, Screen, SummaryData } from './domain/types';
 import { useRestTimer } from './hooks/useRestTimer';
 import { useWakeLock } from './hooks/useWakeLock';
-import { formatClock } from './utils/format';
+import { formatClock, formatWeight } from './utils/format';
 import { parseYouTubeUrl, type YouTubeVideo } from './utils/youtube';
 import { Confetti } from './components/Confetti';
 import { CycleScreen } from './components/CycleScreen';
@@ -136,6 +136,15 @@ function WorkoutApp() {
     setWeightContext(null);
   }, [setWeight, weightContext]);
 
+  const applyWeightToEarlierSets = useCallback((weight: number) => {
+    if (!weightContext) return;
+    for (let set = 1; set < weightContext.set; set += 1) {
+      setWeight(weightContext.day, weightContext.exercise, set, weight);
+    }
+    showToast(`Вес ${formatWeight(weight)} применён к подходам 1–${weightContext.set - 1}`);
+    setWeightContext(null);
+  }, [setWeight, weightContext, showToast]);
+
   const completeDay = useCallback(() => {
     const stats = dayStats(state, currentDay);
     if (stats.done < stats.total) {
@@ -192,7 +201,7 @@ function WorkoutApp() {
       <BottomNav screen={screen} onNavigate={navigate} />
       <SessionBar visible={screen === 'day'} done={stats.done} total={stats.total} tonnage={tonnage} finished={finished} onFinish={completeDay} onOpenHelp={() => openHelp('tonnage')} />
       <RestTimer timer={restTimer} onOpenHelp={() => openHelp('rest')} />
-      <Overlays scrimOpen={anySheetOpen} onClose={closeSheets} weightContext={weightContext} onSaveWeight={saveWeight} helpKey={helpKey} summary={summary} video={video} onCloseVideo={closeVideo} milestoneOpen={milestoneOpen} onCloseMilestone={() => setMilestoneOpen(false)} onHomeFromSummary={returnHomeFromSummary} onToast={showToast} />
+      <Overlays scrimOpen={anySheetOpen} onClose={closeSheets} weightContext={weightContext} onSaveWeight={saveWeight} onApplyAllWeight={applyWeightToEarlierSets} helpKey={helpKey} summary={summary} video={video} onCloseVideo={closeVideo} milestoneOpen={milestoneOpen} onCloseMilestone={() => setMilestoneOpen(false)} onHomeFromSummary={returnHomeFromSummary} onToast={showToast} />
       <Confetti trigger={confettiTrigger} />
       <Toast message={toast} />
     </>

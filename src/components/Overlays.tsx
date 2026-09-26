@@ -19,6 +19,7 @@ interface OverlaysProps {
   onClose: () => void;
   weightContext: WeightContext | null;
   onSaveWeight: (value: number | null) => void;
+  onApplyAllWeight: (value: number) => void;
   helpKey: HelpKey | null;
   summary: SummaryData | null;
   video: YouTubeVideo | null;
@@ -29,7 +30,7 @@ interface OverlaysProps {
   onToast: (message: string) => void;
 }
 
-export function WeightSheet({ context, onClose, onSave }: { context: WeightContext | null; onClose: () => void; onSave: (value: number | null) => void }) {
+export function WeightSheet({ context, onClose, onSave, onApplyAll }: { context: WeightContext | null; onClose: () => void; onSave: (value: number | null) => void; onApplyAll: (value: number) => void }) {
   const [value, setValue] = useState('');
   useEffect(() => {
     if (context) setValue(context.weight ? String(context.weight).replace('.', ',') : '');
@@ -40,6 +41,9 @@ export function WeightSheet({ context, onClose, onSave }: { context: WeightConte
     const next = Math.max(0, Number((current + delta).toFixed(2)));
     setValue(next ? String(next).replace('.', ',') : '');
   };
+  const parsed = Number.parseFloat(value.replace(',', '.'));
+  const valid = Number.isFinite(parsed) && parsed > 0;
+  const canApplyAll = Boolean(context && valid && (context.set ?? 0) > 1);
   return (
     <Sheet open={Boolean(context)} onClose={onClose} id="shW" label="Вес подхода">
       <div className="sh-title">Вес, кг</div>
@@ -49,7 +53,15 @@ export function WeightSheet({ context, onClose, onSave }: { context: WeightConte
       <div className="ws-grid">
         {[-5, -2.5, -1.25, 1.25, 2.5, 5].map((delta) => <button key={delta} className="ws-btn" onClick={() => change(delta)}>{delta > 0 ? '+' : ''}{String(delta).replace('.', ',')}</button>)}
       </div>
-      <button className="btn-primary" id="wsOk" onClick={() => { const parsed = Number.parseFloat(value.replace(',', '.')); onSave(Number.isFinite(parsed) && parsed >= 0 ? parsed : 0); }}>Готово</button>
+      {canApplyAll && (
+        <button
+          className="ws-all"
+          onClick={() => { onApplyAll(parsed); onClose(); }}
+        >
+          Применить {String(parsed).replace('.', ',')} кг к подходам 1–{(context?.set ?? 0) - 1}
+        </button>
+      )}
+      <button className="btn-primary" id="wsOk" onClick={() => { onSave(valid ? parsed : 0); }}>Готово</button>
     </Sheet>
   );
 }
@@ -139,11 +151,11 @@ function VideoModal({ video, onClose }: { video: YouTubeVideo | null; onClose: (
   );
 }
 
-export function Overlays({ scrimOpen, onClose, weightContext, onSaveWeight, helpKey, summary, video, onCloseVideo, milestoneOpen, onCloseMilestone, onHomeFromSummary, onToast }: OverlaysProps) {
+export function Overlays({ scrimOpen, onClose, weightContext, onSaveWeight, onApplyAllWeight, helpKey, summary, video, onCloseVideo, milestoneOpen, onCloseMilestone, onHomeFromSummary, onToast }: OverlaysProps) {
   return (
     <>
       <div id="scrim" className={scrimOpen ? 'on' : ''} onClick={onClose} />
-      <WeightSheet context={weightContext} onClose={onClose} onSave={onSaveWeight} />
+      <WeightSheet context={weightContext} onClose={onClose} onSave={onSaveWeight} onApplyAll={onApplyAllWeight} />
       <HelpSheet helpKey={helpKey} onClose={onClose} />
       <SummarySheet summary={summary} onClose={onClose} onHome={onHomeFromSummary} />
       <VideoModal video={video} onClose={onCloseVideo} />
