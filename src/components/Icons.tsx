@@ -46,8 +46,38 @@ export function BackIcon({ size = 17 }: IconProps) {
   return <svg {...base(size)} strokeWidth={2.2}><path d="M15 5l-7 7 7 7"/></svg>;
 }
 
-export function ThemeIcon() {
-  return <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/></svg>;
+export function ThemeIcon({ theme }: { theme: 'dark' | 'light' }) {
+  // Обе иконки штриховые и живут в currentColor, поэтому следуют за темой.
+  return theme === 'dark' ? (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z" />
+    </svg>
+  ) : (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="4.2" />
+      <path d="M12 2.6v2.2M12 19.2v2.2M4.3 4.3l1.6 1.6M18.1 18.1l1.6 1.6M2.6 12h2.2M19.2 12h2.2M4.3 19.7l1.6-1.6M18.1 5.9l1.6-1.6" />
+    </svg>
+  );
+}
+
+export function LockIcon({ size = 19 }: IconProps) {
+  return <svg {...base(size)}><rect x="4.5" y="10.5" width="15" height="9.5" rx="2.4" /><path d="M8 10.5V7.6a4 4 0 0 1 8 0v2.9" /></svg>;
+}
+
+export function ExportIcon({ size = 19 }: IconProps) {
+  return <svg {...base(size)}><path d="M12 15.5V4.2" /><path d="M8.2 7.8 12 4l3.8 3.8" /><path d="M4.5 14.5v3.9a1.6 1.6 0 0 0 1.6 1.6h11.8a1.6 1.6 0 0 0 1.6-1.6v-3.9" /></svg>;
+}
+
+export function ImportIcon({ size = 19 }: IconProps) {
+  return <svg {...base(size)}><path d="M12 4v11.3" /><path d="M8.2 11.7 12 15.5l3.8-3.8" /><path d="M4.5 14.5v3.9a1.6 1.6 0 0 0 1.6 1.6h11.8a1.6 1.6 0 0 0 1.6-1.6v-3.9" /></svg>;
+}
+
+export function InstallIcon({ size = 19 }: IconProps) {
+  return <svg {...base(size)}><rect x="6.5" y="2.8" width="11" height="18.4" rx="2.4" /><path d="M12 7.4v6.2" /><path d="M9.4 11.2 12 13.8l2.6-2.6" /></svg>;
+}
+
+export function TrashIcon({ size = 19 }: IconProps) {
+  return <svg {...base(size)}><path d="M4.6 6.6h14.8" /><path d="M9.4 6.6V4.8a1.2 1.2 0 0 1 1.2-1.2h2.8a1.2 1.2 0 0 1 1.2 1.2v1.8" /><path d="M6.6 6.6l.9 12.1a1.6 1.6 0 0 0 1.6 1.5h5.8a1.6 1.6 0 0 0 1.6-1.5l.9-12.1" /><path d="M10.4 10.2v6M13.6 10.2v6" /></svg>;
 }
 
 export function PrintIcon() {
