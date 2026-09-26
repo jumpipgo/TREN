@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { DAYS } from '../content/program';
 import {
   cycleTotals,
+  dayIncompleteSets,
   dayReps,
   dayStats,
   dayTonnage,
@@ -28,6 +29,13 @@ describe('workout state', () => {
     state = workoutReducer(state, { type: 'toggle-set', day: 1, exercise: 0, set: 2, weight: 1.25, reps: 2, at: 2 });
     expect(dayTonnage(state, 1)).toBe(3.75);
     expect(dayReps(state, 1)).toBe(3);
+  });
+
+  it('reports completed sets without tonnage inputs', () => {
+    let state = workoutReducer(emptyState(), { type: 'toggle-set', day: 1, exercise: 0, set: 1, weight: 60, reps: 10, at: 1 });
+    state = workoutReducer(state, { type: 'toggle-set', day: 1, exercise: 0, set: 2, weight: null, reps: null, at: 2 });
+    expect(dayIncompleteSets(state, 1)).toBe(1);
+    expect(dayTonnage(state, 1)).toBe(600);
   });
 
   it('stores weights and reps before completion', () => {

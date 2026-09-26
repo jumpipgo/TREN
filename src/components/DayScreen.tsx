@@ -97,7 +97,10 @@ export function DayScreen({
   function handleToggle(exercise: number, set: number) {
     if (finished) return;
     const record = getSet(state, day, exercise, set);
-    const currentWeight = record?.w ?? null;
+    const previous = lastPerf(state, program.ex[exercise].name, day);
+    const previousWeight = previous?.pairs[set - 1]?.w ?? previous?.w ?? null;
+    // The weight button displays the previous performance as a fallback; persist it on completion too.
+    const currentWeight = record?.w ?? previousWeight;
     const currentReps = record?.r ?? null;
     const nextDone = !record?.done;
     toggleSet(day, exercise, set, currentWeight, currentReps);

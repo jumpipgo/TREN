@@ -72,6 +72,7 @@ export function SummarySheet({ summary, onClose, onHome }: { summary: SummaryDat
       <div className="sh-title" id="finTitle">{summary ? `Тренировка #${summary.day} завершена` : 'Тренировка завершена'}</div>
       <div className="sh-sub">подходы зафиксированы в журнале</div>
       <div className="fin-nums"><b id="finTonn">{summary ? formatKg(summary.tonnage) : '0'}</b><span>кг · тоннаж</span><button className="qm" aria-label="Справка: тоннаж">?</button></div>
+      {summary?.incompleteSets ? <div className="fin-warning">Без веса или повторов: {summary.incompleteSets} подходов — они не добавлены в тоннаж.</div> : null}
       <div className="fin-rows">
         <div className="fin-row"><span>Подходы</span><b>{summary ? `${summary.done}/${summary.total}` : '0/0'}</b></div>
         <div className="fin-row"><span>Повторения</span><b>{summary?.reps ?? 0}</b></div>

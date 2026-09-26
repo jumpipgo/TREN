@@ -195,6 +195,22 @@ export function dayTonnage(state: AppState, dayNumber: number): number {
   return total;
 }
 
+export function dayIncompleteSets(state: AppState, dayNumber: number): number {
+  const day = getDay(state, dayNumber);
+  const program = DAYS[dayNumber - 1];
+  if (!day || !program) return 0;
+  let total = 0;
+  program.ex.forEach((exercise, exerciseIndex) => {
+    for (let set = 1; set <= exercise.s; set += 1) {
+      const record = day.sets[setKey(exerciseIndex, set)];
+      if (record?.done && !(record.w != null && record.w > 0 && record.r != null && record.r > 0)) {
+        total += 1;
+      }
+    }
+  });
+  return total;
+}
+
 export function dayReps(state: AppState, dayNumber: number): number {
   const day = getDay(state, dayNumber);
   const program = DAYS[dayNumber - 1];
