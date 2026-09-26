@@ -97,7 +97,7 @@ export function ProfileScreen({ visible, canInstall, onInstall, onToast }: Profi
           )}
         </section>
 
-        <p className="profile-version">МЕЗО · Classic Split · v0.2.0</p>
+        <p className="profile-version">МЕЗО · v0.2.0</p>
       </div>
     </main>
   );
