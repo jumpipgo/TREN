@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, type ReactNode } from 'react';
+import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 import { vibrate } from '../utils/format';
 
 /**
@@ -17,6 +17,9 @@ export function isTouchDevice(): boolean {
   return typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches;
 }
 
+/** Пояснение про колесо показывается один раз за сессию, а не на каждый подход. */
+let gestureExplained = false;
+
 interface WheelOptions {
   value: number | null;
   onChange: (next: number) => void;
@@ -25,6 +28,10 @@ interface WheelOptions {
   step: number;
   /** Сколько пикселей по вертикали нужно провести для одного шага. */
   pixelsPerStep?: number;
+  /** Сообщает компоненту, что палец на колесе — чтобы показать подсказку. */
+  onDragState?: (dragging: boolean) => void;
+  /** Сообщает о первом касании колеса за сессию. */
+  onFirstDrag?: () => void;
 }
 
 export interface WheelField {
@@ -47,6 +54,8 @@ export function useWheelNumber({
   max,
   step,
   pixelsPerStep = 16,
+  onDragState,
+  onFirstDrag,
 }: WheelOptions): WheelField {
   // pending — нерастраченные пиксели: без них медленное движение,
   // меньше одного шага за кадр, никогда не меняет значение.
@@ -78,7 +87,9 @@ export function useWheelNumber({
       value: value ?? min,
     };
     (event.currentTarget as HTMLElement).setPointerCapture?.(event.pointerId);
-  }, [min, value]);
+    onDragState?.(true);
+    onFirstDrag?.();
+  }, [min, onDragState, onFirstDrag, value]);
 
   const onPointerMove = useCallback((event: React.PointerEvent) => {
     const state = drag.current;
@@ -99,7 +110,8 @@ export function useWheelNumber({
   const endDrag = useCallback((event: React.PointerEvent) => {
     if (drag.current?.id !== event.pointerId) return;
     drag.current = null;
-  }, []);
+    onDragState?.(false);
+  }, [onDragState]);
 
   const onWheel = useCallback((event: React.WheelEvent) => {
     if (isTouchDevice()) return;
@@ -129,6 +141,10 @@ interface NumberWheelFieldProps {
   stateClass?: (value: number | null) => string;
   id?: string;
   onOpenChoices?: () => void;
+  /** Текст подсказки при касании; по умолчанию «вверх — больше». */
+  hint?: string;
+  /** Вызывается один раз за сессию, при первом касании колеса. */
+  onFirstDrag?: () => void;
   children?: ReactNode;
 }
 
@@ -149,15 +165,31 @@ export function NumberWheelField({
   stateClass = () => '',
   id,
   onOpenChoices,
+  hint,
+  onFirstDrag,
   children,
 }: NumberWheelFieldProps) {
-  const wheel = useWheelNumber({ value, onChange, min, max, step });
+  const [dragging, setDragging] = useState(false);
   const touch = isTouchDevice();
+
+  const wheel = useWheelNumber({
+    value,
+    onChange,
+    min,
+    max,
+    step,
+    onDragState: setDragging,
+    onFirstDrag: () => {
+      if (gestureExplained || !onFirstDrag) return;
+      gestureExplained = true;
+      onFirstDrag();
+    },
+  });
 
   return (
     <div
       id={id}
-      className={`wheel ${className} ${value != null ? 'wheel-own' : ''} ${stateClass(value)} ${touch ? 'wheel-touch' : ''}`}
+      className={`wheel ${className} ${value != null ? 'wheel-own' : ''} ${stateClass(value)} ${touch ? 'wheel-touch' : ''} ${dragging ? 'is-dragging' : ''}`}
       role="spinbutton"
       tabIndex={0}
       aria-label={ariaLabel}
@@ -175,6 +207,13 @@ export function NumberWheelField({
       {...wheel.handlers}
     >
       <span className="wheel-val">{value != null ? format(value) : (placeholder ?? `${min}–${max}`)}</span>
+      {touch && (
+        <span className="wheel-hint" aria-hidden="true">
+          <svg className="up" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 19V6M6 12l6-6 6 6" /></svg>
+          <svg className="down" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v13M6 12l6 6 6-6" /></svg>
+          <b>{hint ?? 'вверх — больше'}</b>
+        </span>
+      )}
       {children}
     </div>
   );

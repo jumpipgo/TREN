@@ -24,6 +24,7 @@ interface DayScreenProps {
   onOpenWeight: (exercise: number, set: number, weight: number | null) => void;
   onOpenVideo: (url: string) => void;
   onStartRest: (seconds: number) => void;
+  onToast: (message: string) => void;
   onRequestWakeLock: () => void;
 }
 
@@ -36,6 +37,7 @@ export function DayScreen({
   onOpenWeight,
   onOpenVideo,
   onStartRest,
+  onToast,
   onRequestWakeLock,
 }: DayScreenProps) {
   const { state, setReps, setWeight, toggleSet } = useWorkout();
@@ -270,6 +272,7 @@ export function DayScreen({
                           ariaLabel={`Повторения подхода ${set}`}
                           stateClass={(v) => (v == null ? '' : v >= exercise.max ? 'hi' : v < exercise.min ? 'lo' : '')}
                           onOpenChoices={() => setRepsChoice({ exercise: exerciseIndex, set, min: exercise.min, max: exercise.max })}
+                          onFirstDrag={() => onToast('Проведи по полю: вверх — больше, вниз — меньше')}
                         />
                       </li>
                     );

@@ -38,7 +38,8 @@ export function WeightSheet({ context, onClose, onSave, onApplyAll }: { context:
   }, [context]);
   const exercise = context ? DAYS[context.day - 1].ex[context.exercise] : null;
 
-  const wheel = useWheelNumber({ value, onChange: setValue, min: 0, max: 400, step: 0.5, pixelsPerStep: 10 });
+  const [dragging, setDragging] = useState(false);
+  const wheel = useWheelNumber({ value, onChange: setValue, min: 0, max: 400, step: 0.5, pixelsPerStep: 10, onDragState: setDragging });
 
   const change = (delta: number) => {
     vibrate(8);
@@ -59,7 +60,7 @@ export function WeightSheet({ context, onClose, onSave, onApplyAll }: { context:
       <div className="sh-sub">{exercise?.name ?? ''} · подход {context?.set ?? ''}</div>
       <div className="ws-lbl">колесо или шаги</div>
       <div
-        className={`ws-dial ${value != null ? 'wheel-own' : ''}`}
+        className={`ws-dial ${value != null ? 'wheel-own' : ''} ${dragging ? 'is-dragging' : ''}`}
         id="wsIn"
         role="spinbutton"
         tabIndex={0}
@@ -75,6 +76,11 @@ export function WeightSheet({ context, onClose, onSave, onApplyAll }: { context:
       >
         <b>{value != null ? shown : 'крутите'}</b>
         {value != null && <small>кг</small>}
+        <span className="wheel-hint" aria-hidden="true">
+          <svg className="up" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 19V6M6 12l6-6 6 6" /></svg>
+          <svg className="down" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v13M6 12l6 6 6-6" /></svg>
+          <b>вверх — больше</b>
+        </span>
       </div>
       <div className="ws-grid">
         {[-5, -2.5, -1.25, 1.25, 2.5, 5].map((delta) => <button key={delta} className="ws-btn" onClick={() => change(delta)}>{delta > 0 ? '+' : ''}{String(delta).replace('.', ',')}</button>)}
