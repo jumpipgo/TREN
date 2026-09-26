@@ -154,7 +154,7 @@ export function HomeScreen({ visible, onOpenDay, onOpenCycle, onToast, onCelebra
                 const partial = isTraining && !finished && dayStats(state, dayNumber).done > 0;
                 const current = isTraining && dayNumber === currentDay;
                 const className = isTraining ? (finished ? 'done' : current ? 'now' : '') : 'rest';
-                const sub = finished ? '✓' : partial ? '…' : isTraining ? ['грудь', 'спина', 'ноги'][Math.floor(index / 2)] : 'отдых';
+                const sub = finished ? 'готово' : partial ? '…' : isTraining ? ['грудь', 'спина', 'ноги'][Math.floor(index / 2)] : 'отдых';
                 return <div key={names[index]} className={`wd ${className}`}><b>{names[index]}</b><span>{sub}</span></div>;
               })}
             </div>
