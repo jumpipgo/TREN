@@ -11,7 +11,8 @@
     "test:watch": "vitest",
     "check:contrast": "node scripts/check-contrast.mjs",
     "check:typescale": "node scripts/check-type-scale.mjs",
-    "check": "npm run check:contrast && npm run check:typescale && npm test"
+    "check:css": "node scripts/check-css.mjs",
+    "check": "npm run check:css && npm run check:contrast && npm run check:typescale && npm test"
   },
   "dependencies": {
     "react": "^19.3.0",

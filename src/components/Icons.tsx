@@ -38,6 +38,11 @@ export function PlayIcon({ size = 10 }: IconProps) {
   return <svg width={size} height={size} viewBox="0 0 12 12" fill="currentColor"><path d="M2 1.2v9.6L11 6z"/></svg>;
 }
 
+/** Шеврон вниз — признак «нажми, откроется окно выбора». */
+export function PickIcon({ size = 12 }: IconProps) {
+  return <svg {...base(size)}><path d="M7 10.5 12 15.5 17 10.5" /></svg>;
+}
+
 export function ArrowIcon({ size = 15 }: IconProps) {
   return <svg {...base(size)} strokeWidth={2.2}><path d="M9 5l7 7-7 7"/></svg>;
 }

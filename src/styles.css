@@ -364,7 +364,7 @@ details.blk[open] .chev{transform:rotate(90deg)}
 /* карточка упражнения */
 #exList{padding:14px var(--gutter) 6px;max-width:720px;margin:0 auto}
 .ex{
-  --set-grid:36px 16px 36px minmax(56px,1fr) 36px 70px;
+  --set-grid:36px 16px minmax(64px,1fr) 84px;
   --set-gap:6px;
   background:var(--surface);border:1px solid var(--line-soft);
   border-radius:20px;padding:18px 16px 10px;margin-bottom:14px;
@@ -429,7 +429,7 @@ details.blk[open] .chev{transform:rotate(90deg)}
 .fc-n{font-weight:800;font-size:var(--fs-10);font-family:var(--font-body);color:var(--faint);text-align:center}
 .fc-lb{display:flex;align-items:center;justify-content:center;gap:4px;font-weight:800;font-size:var(--fs-10);font-family:var(--font-body);letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
 
-/* строка подхода: [✊][№][−][вес][+][повторы] */
+/* строка подхода: [✊][№][вес][повторы] */
 .set-row,.fld-cap{
   display:grid;grid-template-columns:var(--set-grid);gap:var(--set-gap);align-items:center;
 }
@@ -450,12 +450,6 @@ details.blk[open] .chev{transform:rotate(90deg)}
 }
 @keyframes pop{55%{transform:scale(1.18)}}
 .set-n{font-weight:800;font-size:var(--fs-11);font-family:var(--font-body);color:var(--faint);text-align:center}
-.st{
-  height:48px;border-radius:12px;background:var(--bg);
-  border:1px solid var(--line-soft);color:var(--dim);
-  font-weight:800;font-size:var(--fs-20);font-family:var(--font-body);transition:transform .12s,color .12s,border-color .2s;
-}
-.st:active{transform:scale(.92);color:var(--text);border-color:var(--lime)}
 .wbtn{
   min-width:0;height:48px;border-radius:12px;background:var(--bg);
   border:1px solid var(--line-soft);overflow:hidden;white-space:nowrap;
@@ -470,47 +464,22 @@ details.blk[open] .chev{transform:rotate(90deg)}
 .wbtn.src-carried small,.wbtn.src-prev small{opacity:.7}
 /* как только значение стало своим (нажали ± или ввели в шторке) — обычный вид */
 .wbtn.src-own{color:var(--text)}
-.reps{
-  min-width:0;height:46px;width:100%;border-radius:12px;background:var(--bg);
-  border:1px solid var(--line-soft);text-align:center;
-  font-weight:600;font-size:clamp(var(--fs-14),2.8vw,var(--fs-17));font-family:var(--font-display);
-  font-variant-numeric:tabular-nums;
-  transition:border-color .2s,color .2s,background .2s;
+/* Поле повторов — кнопка: тап открывает окно выбора.
+   Жеста-колеса здесь нет намеренно: прокрутка не даёт вернуть исходное
+   пустое состояние и уводила значение за нижнюю границу коридора. */
+.wbtn.reps{height:48px;gap:7px}
+.reps-n{font-variant-numeric:tabular-nums}
+.wbtn.reps .reps-hint{
+  font-weight:600;font-size:var(--fs-12);font-family:var(--font-body);
+  letter-spacing:.02em;color:var(--faint);
 }
-.reps::placeholder{color:var(--faint);font-weight:600;font-size:var(--fs-11);font-family:var(--font-body);letter-spacing:.02em}
-.reps:focus{border-color:var(--lime);background:var(--lime-soft);outline:none}
-.reps.hi{border-color:var(--success);color:var(--success);background:color-mix(in srgb,var(--success) 12%,transparent)}
-.reps.lo{border-color:var(--warn);color:var(--warn);background:color-mix(in srgb,var(--warn) 8%,transparent)}
-
-/* Степпер повторов: −1 [число] +1 плюс жест по числу.
-   Кнопки явные (HIG: смысл не угадывается), значение никогда не накрывается. */
-.stepper{
-  position:relative;min-width:0;width:100%;height:46px;
-  display:flex;align-items:stretch;gap:2px;
-  border-radius:12px;background:var(--bg);border:1px solid var(--line-soft);
-  overflow:hidden;
-  user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;
-  touch-action:none;cursor:ns-resize;outline:none;
-}
-.stepper:focus-visible{outline:2px solid var(--lime);outline-offset:2px}
-.step-btn{
-  flex:0 0 30px;display:grid;place-items:center;background:transparent;
-  border:0;color:var(--dim);font:700 var(--fs-20)/1 var(--font-display);
-  transition:background .14s,color .14s;
-}
-.step-btn:active{background:var(--lime-soft);color:var(--lime)}
-.step-btn:disabled{opacity:.28;pointer-events:none}
-.step-val{
-  position:relative;flex:1 1 auto;min-width:0;
-  display:flex;align-items:baseline;justify-content:center;gap:4px;
-  overflow:hidden;
-}
-.step-drag{
-  position:absolute;right:5px;top:50%;transform:translateY(-50%);
-  display:flex;flex-direction:column;gap:1px;color:var(--lime);
-  pointer-events:none;animation:fade .12s var(--ease);
-}
-.step-drag svg{width:11px;height:11px;display:block}
+.wbtn.reps svg{width:12px;height:12px;flex:0 0 auto;color:var(--faint);transition:transform .16s var(--ease),color .16s}
+.wbtn.reps:active svg{transform:translateY(1px);color:var(--lime)}
+.wbtn.reps.hi{border-color:var(--success);color:var(--success);background:color-mix(in srgb,var(--success) 12%,transparent)}
+.wbtn.reps.hi svg{color:var(--success)}
+.wbtn.reps.lo{border-color:var(--warn);color:var(--warn);background:color-mix(in srgb,var(--warn) 8%,transparent)}
+.wbtn.reps.lo svg{color:var(--warn)}
+.wbtn.reps:disabled{opacity:.6}
 
 /* Поле-«колесо»: то же поле повторов, но со значением жестом и без клавиатуры.
    Именно flex, а не grid/place-items: там центрируется ячейка, и цифра
@@ -531,22 +500,21 @@ details.blk[open] .chev{transform:rotate(90deg)}
 .wheel-own .wheel-val{font-family:var(--font-display);font-weight:600;font-size:clamp(var(--fs-14),2.8vw,var(--fs-17));color:inherit}
 .wheel:not(.wheel-own) .wheel-val{font-family:var(--font-body);font-weight:600;font-size:var(--fs-11);letter-spacing:.02em;color:var(--faint)}
 
-50%{transform:translateY(3px);opacity:1}}
-
 /* Быстрый выбор повторов */
 .choice{
   position:fixed;inset:0;z-index:80;display:flex;align-items:flex-end;
   background:var(--scrim);animation:fade .18s var(--ease);
 }
 .choice-panel{
-  width:100%;padding:18px var(--gutter) calc(18px + env(safe-area-inset-bottom));
+  width:100%;max-height:92vh;overflow-y:auto;overscroll-behavior:contain;
+  padding:18px var(--gutter) calc(18px + env(safe-area-inset-bottom));
   border-radius:var(--r-xl) var(--r-xl) 0 0;background:var(--surface);
   border-top:1px solid var(--line);box-shadow:0 -20px 60px rgba(0,0,0,.4);
   animation:slide-up .22s var(--ease);
 }
 .choice-head b{display:block;font-size:var(--fs-17);font-weight:700}
 .choice-head small{display:block;margin-top:3px;color:var(--faint);font-size:var(--fs-12)}
-.choice-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(56px,1fr));gap:8px;margin-top:16px}
+.choice-grid{display:grid;grid-template-columns:repeat(var(--cols,4),minmax(0,1fr));gap:8px;margin-top:16px}
 .choice-btn{
   min-height:52px;border-radius:var(--r-md);background:var(--bg);
   border:1px solid var(--line-soft);color:var(--text);
@@ -556,10 +524,11 @@ details.blk[open] .chev{transform:rotate(90deg)}
 .choice-btn:active{transform:scale(.94)}
 .choice-btn.top{border-color:color-mix(in srgb,var(--success) 40%,var(--line))}
 .choice-btn.active{background:var(--btn-bg);color:var(--btn-ink);border-color:var(--btn-bg)}
-.choice-cancel{
-  width:100%;min-height:46px;margin-top:12px;border-radius:var(--r-md);
-  color:var(--dim);font-weight:700;font-size:var(--fs-15);
-}
+.choice-foot{display:flex;gap:8px;margin-top:14px}
+.choice-foot>button{flex:1 1 0;min-height:46px;border-radius:var(--r-md);font-weight:700;font-size:var(--fs-15)}
+.choice-reset{color:var(--dim);border:1px solid var(--line-soft)}
+.choice-reset:disabled{opacity:.4}
+.choice-cancel{color:var(--dim)}
 @keyframes fade{from{opacity:0}}
 @keyframes slide-up{from{transform:translateY(16px);opacity:0}}
 
@@ -746,18 +715,19 @@ body.on-day #tpill{bottom:calc(104px + env(safe-area-inset-bottom))}
 /* Циферблат веса: тот же степпер, что и у повторов, но шире и крупнее.
    Раньше здесь был input, который поднимал системную клавиатуру. */
 .ws-dial{
-  max-width:260px;height:64px;margin:6px auto 18px;border-radius:14px;
-  border:1px solid var(--line);
+  max-width:260px;height:72px;margin:6px auto 18px;gap:6px;
+  border-radius:14px;border:1px solid var(--line);background:var(--bg);
 }
-.ws-dial .step-val{gap:5px}
-.step-unit{font-weight:700;font-size:var(--fs-12);font-family:var(--font-body);color:var(--faint)}
 .ws-dial .wheel-val{
-  font-family:var(--font-display);font-weight:600;font-size:var(--fs-30);
+  font-family:var(--font-display);font-weight:600;font-size:var(--fs-34);
   color:var(--text);font-variant-numeric:tabular-nums;
 }
-.ws-dial .step-btn{flex:0 0 46px;font-size:var(--fs-24)}
-.ws-dial .step-btn:disabled{opacity:.25}
-.ws-dial .wheel-own{border-color:var(--lime)}
+.ws-dial:not(.wheel-own) .wheel-val{
+  font-family:var(--font-body);font-weight:700;font-size:var(--fs-15);
+  letter-spacing:.02em;color:var(--faint);
+}
+.ws-dial.wheel-own{border-color:var(--lime)}
+.wheel-unit{font-weight:700;font-size:var(--fs-12);font-family:var(--font-body);color:var(--faint)}
 .ws-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
 .ws-btn{
   height:52px;border-radius:14px;background:var(--elevated);
@@ -831,7 +801,7 @@ body.on-day #toast{top:calc(78px + env(safe-area-inset-top))}
   .nav-btn{min-width:58px}
   .sb-l{min-width:94px;padding-left:8px;padding-right:8px}
   #btnFin{padding:0 14px;font-size:var(--fs-13)}
-  .ex{--set-grid:32px 14px 32px minmax(48px,1fr) 32px 64px;--set-gap:4px;padding-left:12px;padding-right:12px}
+  .ex{--set-grid:32px 14px minmax(56px,1fr) 78px;--set-gap:4px;padding-left:12px;padding-right:12px}
   .ex-meta{padding-left:37px;gap:7px}
   .ex-sum{padding-left:37px}
   #tpill{gap:4px;padding-left:6px;padding-right:6px}
@@ -842,7 +812,7 @@ body.on-day #toast{top:calc(78px + env(safe-area-inset-top))}
   .ring{width:min(204px,100%)}
   .crow{grid-template-columns:36px minmax(0,1fr) auto;margin-left:10px;margin-right:10px;padding-left:10px;padding-right:10px;gap:8px}
   .goal-line{margin-left:10px;margin-right:10px;padding-left:12px;padding-right:12px}
-  .ex{--set-grid:28px 10px 28px minmax(42px,1fr) 28px 58px;--set-gap:3px;padding-left:10px;padding-right:10px}
+  .ex{--set-grid:28px 10px minmax(48px,1fr) 72px;--set-gap:3px;padding-left:10px;padding-right:10px}
   .ex-meta{padding-left:33px}
   .ex-sum{padding-left:33px}
   .wbtn small{display:none}
@@ -850,12 +820,12 @@ body.on-day #toast{top:calc(78px + env(safe-area-inset-top))}
 @media(min-width:768px){
   .goal-line{margin-left:auto;margin-right:auto;max-width:720px}
   .today,.done-hero,.week{padding-left:0;padding-right:0}
-  .ex{padding:20px 20px 12px;--set-grid:38px 18px 40px minmax(80px,1fr) 40px 78px;--set-gap:8px}
+  .ex{padding:20px 20px 12px;--set-grid:38px 18px minmax(140px,1fr) 96px;--set-gap:8px}
 }
 @media(hover:hover) and (pointer:fine){
   .ex-name:hover{color:var(--lime)}
   .crow:hover{background:var(--surface)}
-  .ws-btn:hover,.st:hover{border-color:var(--lime)}
+  .ws-btn:hover{border-color:var(--lime)}
   .dch:hover{border-color:var(--lime);color:var(--text)}
   .icon-btn:hover{color:var(--text)}
   .qi:hover,.qm:hover{color:var(--lime);border-color:var(--lime)}

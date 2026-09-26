@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState, type PointerEvent as ReactPointerEvent, type ReactNode } from 'react';
+import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 import { vibrate } from '../utils/format';
 
 /**
@@ -133,6 +133,8 @@ interface NumberWheelFieldProps {
   min: number;
   max: number;
   step?: number;
+  /** Сколько пикселей по вертикали нужно провести для одного шага. */
+  pixelsPerStep?: number;
   className?: string;
   placeholder?: string;
   format?: (value: number) => string;
@@ -143,6 +145,8 @@ interface NumberWheelFieldProps {
   onOpenChoices?: () => void;
   /** Вызывается один раз за сессию, при первом касании колеса. */
   onFirstDrag?: () => void;
+  /** Единица измерения рядом со значением, например «кг». */
+  unit?: string;
   children?: ReactNode;
 }
 
@@ -156,6 +160,7 @@ export function NumberWheelField({
   min,
   max,
   step = 1,
+  pixelsPerStep,
   className = '',
   placeholder,
   format = (v) => String(v),
@@ -164,6 +169,7 @@ export function NumberWheelField({
   id,
   onOpenChoices,
   onFirstDrag,
+  unit,
   children,
 }: NumberWheelFieldProps) {
   const [dragging, setDragging] = useState(false);
@@ -175,6 +181,7 @@ export function NumberWheelField({
     min,
     max,
     step,
+    pixelsPerStep,
     onDragState: setDragging,
     onFirstDrag: () => {
       if (gestureExplained || !onFirstDrag) return;
@@ -204,92 +211,8 @@ export function NumberWheelField({
       {...wheel.handlers}
     >
       <span className="wheel-val">{value != null ? format(value) : (placeholder ?? `${min}–${max}`)}</span>
+      {value != null && unit && <small className="wheel-unit">{unit}</small>}
       {children}
-    </div>
-  );
-}
-
-interface WheelStepperProps extends Omit<NumberWheelFieldProps, 'id' | 'children'> {
-  decreaseLabel?: string;
-  increaseLabel?: string;
-  /** Единица измерения рядом со значением, например «кг». */
-  unit?: string;
-}
-
-/**
- * Гибрид по рекомендациям HIG и NN/g: явные кнопки ±1 (смысл не нужно угадывать,
- * они крупные и не накрывают значение) плюс жест по самому числу для быстрой
- * подстройки. Значение всегда видно — накрывать его подсказкой нельзя.
- */
-export function WheelStepper({
-  value,
-  onChange,
-  min,
-  max,
-  step = 1,
-  className = '',
-  placeholder,
-  format = (v) => String(v),
-  ariaLabel,
-  stateClass = () => '',
-  onOpenChoices,
-  onFirstDrag,
-  decreaseLabel = 'Уменьшить',
-  increaseLabel = 'Увеличить',
-  unit,
-}: WheelStepperProps) {
-  const [dragging, setDragging] = useState(false);
-  const current = value ?? min;
-
-  const wheel = useWheelNumber({
-    value,
-    onChange,
-    min,
-    max,
-    step,
-    onDragState: setDragging,
-    onFirstDrag: () => {
-      if (gestureExplained || !onFirstDrag) return;
-      gestureExplained = true;
-      onFirstDrag();
-    },
-  });
-
-  const bump = (delta: number) => (event: ReactPointerEvent<HTMLButtonElement>) => {
-    event.stopPropagation();
-    const next = Math.min(Math.max(current + delta, min), max);
-    if (next !== value) {
-      onChange(next);
-      vibrate(8);
-    }
-  };
-
-  return (
-    <div
-      className={`stepper ${className} ${value != null ? 'wheel-own' : ''} ${stateClass(value)} ${dragging ? 'is-dragging' : ''}`}
-      role="spinbutton"
-      aria-label={ariaLabel}
-      aria-valuenow={value ?? undefined}
-      aria-valuemin={min}
-      aria-valuemax={max}
-      onClick={() => {
-        if (wheel.wasDrag()) { wheel.clearDrag(); return; }
-        onOpenChoices?.();
-      }}
-      {...wheel.handlers}
-    >
-      <button type="button" className="step-btn" onPointerDown={(event) => event.stopPropagation()} onClick={bump(-step)} aria-label={decreaseLabel} tabIndex={-1} disabled={current <= min}>−</button>
-      <span className="step-val">
-        <span className="wheel-val">{value != null ? format(value) : (placeholder ?? `${min}–${max}`)}</span>
-        {value != null && unit && <small className="step-unit">{unit}</small>}
-        {dragging && (
-          <i className="step-drag" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"><path d="M12 19V6M6 12l6-6 6 6" /></svg>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v13M6 12l6 6 6-6" /></svg>
-          </i>
-        )}
-      </span>
-      <button type="button" className="step-btn" onPointerDown={(event) => event.stopPropagation()} onClick={bump(step)} aria-label={increaseLabel} tabIndex={-1} disabled={current >= max}>+</button>
     </div>
   );
 }

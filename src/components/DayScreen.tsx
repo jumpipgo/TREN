@@ -12,8 +12,15 @@ import {
 import type { HelpKey } from '../domain/types';
 import { formatWeight, vibrate } from '../utils/format';
 import { inferMuscle } from '../utils/muscles';
-import { PlayIcon, BackIcon } from './Icons';
-import { NumberWheelField } from './NumberWheel';
+
+/** Сколько чисел в ряд: чтобы окно выбора не выглядело «хвостом» из одного числа. */
+function repsColumns(count: number): number {
+  if (count <= 4) return count;
+  if (count <= 8) return 4;
+  if (count <= 15) return 5;
+  return 6;
+}
+import { PlayIcon, BackIcon, PickIcon } from './Icons';
 
 interface DayScreenProps {
   visible: boolean;
@@ -24,7 +31,6 @@ interface DayScreenProps {
   onOpenWeight: (exercise: number, set: number, weight: number | null) => void;
   onOpenVideo: (url: string) => void;
   onStartRest: (seconds: number) => void;
-  onToast: (message: string) => void;
   onRequestWakeLock: () => void;
 }
 
@@ -37,10 +43,9 @@ export function DayScreen({
   onOpenWeight,
   onOpenVideo,
   onStartRest,
-  onToast,
   onRequestWakeLock,
 }: DayScreenProps) {
-  const { state, setReps, setWeight, toggleSet } = useWorkout();
+  const { state, setReps, toggleSet } = useWorkout();
   const listRef = useRef<HTMLDivElement>(null);
   const touchStart = useRef<{ x: number; y: number } | null>(null);
   const [openCards, setOpenCards] = useState<Set<number>>(new Set());
@@ -129,16 +134,6 @@ export function DayScreen({
       const nextExercise = current?.closest<HTMLElement>('.ex')?.parentElement?.querySelector<HTMLElement>('.ex:not(.done-card) .set-row:not(.done)');
       (next ?? nextExercise)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }, 160);
-  }
-
-  function stepWeight(exercise: number, set: number, delta: number) {
-    const record = getSet(state, day, exercise, set);
-    const previous = lastPerf(state, program.ex[exercise].name, day);
-    const previousWeight = previous?.pairs[set - 1]?.w ?? previous?.w ?? null;
-    // +/- must continue from the value shown in the field, not from zero.
-    const base = record?.w ?? carryWeight(state, day, exercise, set) ?? previousWeight ?? 0;
-    const next = Math.max(0, Number((base + delta).toFixed(2)));
-    setWeight(day, exercise, set, next || null);
   }
 
   function updateReps(exercise: number, set: number, value: string) {
@@ -237,9 +232,8 @@ export function DayScreen({
               <div className="ex-body"><div className="ex-bin">
                 <div className="fld-cap">
                   <button className="qi" onClick={() => onOpenHelp('check')} aria-label="Справка: отметка подхода">?</button>
-                  <span className="fc-n">№</span><span />
+                  <span className="fc-n">№</span>
                   <span className="fc-lb">вес<button className="qi" onClick={() => onOpenHelp('weight')} aria-label="Справка: вес подхода">?</button></span>
-                  <span />
                   <span className="fc-lb">повт<button className="qi" onClick={() => onOpenHelp('reps')} aria-label="Справка: повторы">?</button></span>
                 </div>
                 <ol className="sets">
@@ -258,22 +252,17 @@ export function DayScreen({
                       <li key={setKey(exerciseIndex, set)} className={`set-row ${currentSet ? 'current' : ''} ${done ? 'done' : ''}`} data-ex={exerciseIndex} data-set={set}>
                         <button className="check" onClick={() => handleToggle(exerciseIndex, set)} disabled={finished} role="checkbox" aria-checked={done} aria-label={`Подход ${set}`} />
                         <span className="set-n">{set}</span>
-                        <button className="st" onClick={() => stepWeight(exerciseIndex, set, -2.5)} disabled={finished} aria-label="Минус 2,5 кг">−</button>
                         <button className={`wbtn src-${source} ${weight ? '' : 'empty'}`} data-w={weight ?? ''} onClick={() => onOpenWeight(exerciseIndex, set, weight)} disabled={finished} aria-label={`Вес подхода ${set}`}>{weight ? formatWeight(weight) : '—'}{weight ? <small>кг</small> : null}</button>
-                        <button className="st" onClick={() => stepWeight(exerciseIndex, set, 2.5)} disabled={finished} aria-label="Плюс 2,5 кг">+</button>
-                        <NumberWheelField
-                          className="reps"
-                          value={reps ?? null}
-                          onChange={(next) => updateReps(exerciseIndex, set, String(next))}
-                          min={1}
-                          max={exercise.max + 8}
-                          step={1}
-                          placeholder={`${exercise.min}–${exercise.max}`}
-                          ariaLabel={`Повторения подхода ${set}`}
-                          stateClass={(v) => (v == null ? '' : v >= exercise.max ? 'hi' : v < exercise.min ? 'lo' : '')}
-                          onOpenChoices={() => setRepsChoice({ exercise: exerciseIndex, set, min: exercise.min, max: exercise.max })}
-                          onFirstDrag={() => onToast('Проведи по числу: вверх — больше, вниз — меньше')}
-                        />
+                        <button
+                          className={`wbtn reps ${reps == null ? 'empty' : reps >= exercise.max ? 'hi' : reps < exercise.min ? 'lo' : ''}`}
+                          onClick={() => setRepsChoice({ exercise: exerciseIndex, set, min: exercise.min, max: exercise.max })}
+                          disabled={finished}
+                          aria-haspopup="dialog"
+                          aria-label={`Повторения подхода ${set}`}
+                        >
+                          {reps == null ? <span className="reps-hint">{exercise.min}–{exercise.max}</span> : <span className="reps-n">{reps}</span>}
+                          <PickIcon />
+                        </button>
                       </li>
                     );
                   })}
@@ -283,7 +272,7 @@ export function DayScreen({
           );
         })}
       </div>
-      <p className="day-foot">«?» у любого поля — справка с примером · повторы — колесом или тапом по полю · свайп ←/→ — соседняя тренировка · <span className="mono">пробел</span> — отметить подход · ссылки на технику открываются с нужной секунды</p>
+      <p className="day-foot">«?» у любого поля — справка с примером · повторы — тап по полю, откроется окно выбора · вес — тап по полю, крутится пальцем · свайп ←/→ — соседняя тренировка · <span className="mono">пробел</span> — отметить подход · ссылки на технику открываются с нужной секунды</p>
 
       {repsChoice && (
         <div className="choice" role="dialog" aria-label="Выбор повторов" onClick={(event) => { if (event.target === event.currentTarget) setRepsChoice(null); }}>
@@ -292,7 +281,7 @@ export function DayScreen({
               <b>Повторы</b>
               <small>подход {repsChoice.set} · {program.ex[repsChoice.exercise].name}</small>
             </div>
-            <div className="choice-grid">
+            <div className="choice-grid" style={{ '--cols': repsColumns(repsChoice.max - repsChoice.min + 1) } as CSSProperties}>
               {Array.from({ length: repsChoice.max - repsChoice.min + 1 }, (_, i) => repsChoice.min + i).map((value) => {
                 const current = getSet(state, day, repsChoice.exercise, repsChoice.set)?.r === value;
                 return (
@@ -306,7 +295,16 @@ export function DayScreen({
                 );
               })}
             </div>
-            <button className="choice-cancel" onClick={() => setRepsChoice(null)}>Отмена</button>
+            <div className="choice-foot">
+              <button
+                className="choice-reset"
+                onClick={() => { updateReps(repsChoice.exercise, repsChoice.set, ''); setRepsChoice(null); }}
+                disabled={getSet(state, day, repsChoice.exercise, repsChoice.set)?.r == null}
+              >
+                Сбросить
+              </button>
+              <button className="choice-cancel" onClick={() => setRepsChoice(null)}>Отмена</button>
+            </div>
           </div>
         </div>
       )}

@@ -6,7 +6,7 @@ import { formatKg, vibrate } from '../utils/format';
 import type { YouTubeVideo } from '../utils/youtube';
 import { Sheet } from './Sheet';
 import { HomeIcon, PrintIcon } from './Icons';
-import { WheelStepper } from './NumberWheel';
+import { NumberWheelField } from './NumberWheel';
 
 export interface WeightContext {
   day: number;
@@ -55,23 +55,22 @@ export function WeightSheet({ context, onClose, onSave, onApplyAll }: { context:
     <Sheet open={Boolean(context)} onClose={onClose} id="shW" label="Вес подхода">
       <div className="sh-title">Вес, кг</div>
       <div className="sh-sub">{exercise?.name ?? ''} · подход {context?.set ?? ''}</div>
-      <div className="ws-lbl">колесо или шаги</div>
-      <WheelStepper
+      <div className="ws-lbl">крутите число или наберите шагами</div>
+      <NumberWheelField
         className="ws-dial"
         value={value}
         onChange={setValue}
         min={0}
         max={400}
         step={0.5}
+        pixelsPerStep={10}
         placeholder="—"
         format={(v) => formatKg(v).replace(' кг', '')}
         ariaLabel="Вес подхода в килограммах"
-        decreaseLabel="Уменьшить вес"
-        increaseLabel="Увеличить вес"
         unit="кг"
       />
       <div className="ws-grid">
-        {[-5, -2.5, -1.25, 1.25, 2.5, 5].map((delta) => <button key={delta} className="ws-btn" onClick={() => change(delta)}>{delta > 0 ? '+' : ''}{String(delta).replace('.', ',')}</button>)}
+        {[-5, -2.5, -1.25, 1.25, 2.5, 5].map((delta) => <button key={delta} className="ws-btn" onClick={() => change(delta)}>{delta > 0 ? '+' : '−'}{Math.abs(delta).toString().replace('.', ',')}</button>)}
       </div>
       {canApplyAll && (
         <button
