@@ -8,7 +8,10 @@
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "check:contrast": "node scripts/check-contrast.mjs",
+    "check:typescale": "node scripts/check-type-scale.mjs",
+    "check": "npm run check:contrast && npm run check:typescale && npm test"
   },
   "dependencies": {
     "react": "^19.3.0",

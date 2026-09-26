@@ -4,16 +4,74 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#000000" />
-    <style>html,body{margin:0;background:#000}</style>
-    <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <link rel="manifest" href="./manifest.webmanifest" />
     <meta name="description" content="МЕЗО — офлайн-трекер тренировок" />
     <title>МЕЗО · Классический сплит</title>
+
+    <!--
+      Критические стили до загрузки основного CSS: тёмный фон (чтобы не было
+      белого кадра) и каркас главного экрана. React заменяет #root сразу после
+      монтирования, поэтому каркас виден только на время загрузки бандла.
+      Повторяет структуру главной: шапка, кольцо прогресса, карточка тренировки.
+    -->
+    <style>
+      html, body { margin: 0; background: #000; }
+      .sk { border-radius: 18px; background: #10141B; position: relative; overflow: hidden; }
+      .sk::after {
+        content: ''; position: absolute; inset: 0;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .055), transparent);
+        animation: sk-shimmer 1.3s ease-in-out infinite;
+      }
+      @keyframes sk-shimmer { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
+      @media (prefers-reduced-motion: reduce) { .sk::after { animation: none; } }
+      .sk-wrap { padding: 18px 16px 120px; display: flex; flex-direction: column; gap: 16px; }
+      .sk-top { display: flex; justify-content: space-between; align-items: center; }
+      .sk-logo { width: 92px; height: 20px; border-radius: 8px; }
+      .sk-btn { width: 48px; height: 48px; border-radius: 14px; }
+      .sk-ring { width: min(240px, 68vw); aspect-ratio: 1; border-radius: 50%; margin: 8px auto 4px; }
+      .sk-label { width: 44%; height: 11px; border-radius: 6px; }
+      .sk-title { width: 62%; height: 30px; border-radius: 10px; }
+      .sk-line { height: 13px; border-radius: 6px; }
+      .sk-line.s90 { width: 90%; } .sk-line.s70 { width: 70%; } .sk-line.s45 { width: 45%; }
+      .sk-card { padding: 18px 16px; display: flex; flex-direction: column; gap: 10px; }
+      .sk-cta { height: 56px; border-radius: 16px; background: #1a1f14; }
+      [data-theme='light'] .sk { background: #FFFFFF; }
+      [data-theme='light'] .sk::after { background: linear-gradient(90deg, transparent, rgba(23, 34, 41, .045), transparent); }
+      [data-theme='light'] .sk-cta { background: #EAF0D8; }
+    </style>
+    <script>
+      // Тема применяется до первой отрисовки, иначе каркас мигнёт не той темой.
+      (function () {
+        try {
+          var raw = localStorage.getItem('meso.classic-split.v1');
+          if (raw && JSON.parse(raw).theme === 'light') {
+            document.documentElement.dataset.theme = 'light';
+            document.documentElement.style.background = '#F2F5F4';
+          }
+        } catch (e) { /* приватный режим — остаёмся на тёмной */ }
+      })();
+    </script>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div class="sk-wrap" aria-hidden="true">
+        <div class="sk-top">
+          <div class="sk sk-logo"></div>
+          <div class="sk sk-btn"></div>
+        </div>
+        <div class="sk sk-ring"></div>
+        <div class="sk sk-label"></div>
+        <div class="sk sk-title"></div>
+        <div class="sk sk-line s70"></div>
+        <div class="sk sk-line s90"></div>
+        <div class="sk sk-card">
+          <div class="sk sk-line s45"></div>
+          <div class="sk sk-line s90"></div>
+          <div class="sk sk-line s70"></div>
+          <div class="sk sk-cta"></div>
+        </div>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

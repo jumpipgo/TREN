@@ -3,6 +3,7 @@ import { HELP } from '../content/help';
 import { DAYS, OUTRO } from '../content/program';
 import type { HelpKey, SummaryData } from '../domain/types';
 import { formatKg } from '../utils/format';
+import { keepFieldVisible } from '../utils/scrollToField';
 import type { YouTubeVideo } from '../utils/youtube';
 import { Sheet } from './Sheet';
 
@@ -48,7 +49,7 @@ export function WeightSheet({ context, onClose, onSave, onApplyAll }: { context:
       <div className="sh-title">Вес, кг</div>
       <div className="sh-sub">{exercise?.name ?? ''} · подход {context?.set ?? ''}</div>
       <div className="ws-lbl">быстрый ввод</div>
-      <input id="wsIn" inputMode="decimal" autoComplete="off" value={value} onChange={(event) => setValue(event.target.value)} />
+      <input id="wsIn" inputMode="decimal" autoComplete="off" value={value} onChange={(event) => setValue(event.target.value)} onFocus={(event) => keepFieldVisible(event.currentTarget, 40)} />
       <div className="ws-grid">
         {[-5, -2.5, -1.25, 1.25, 2.5, 5].map((delta) => <button key={delta} className="ws-btn" onClick={() => change(delta)}>{delta > 0 ? '+' : ''}{String(delta).replace('.', ',')}</button>)}
       </div>

@@ -12,6 +12,7 @@ import {
 import type { HelpKey } from '../domain/types';
 import { formatWeight, vibrate } from '../utils/format';
 import { inferMuscle } from '../utils/muscles';
+import { keepFieldVisible } from '../utils/scrollToField';
 import { PlayIcon, BackIcon } from './Icons';
 
 interface DayScreenProps {
@@ -254,7 +255,17 @@ export function DayScreen({
                         <button className="st" onClick={() => stepWeight(exerciseIndex, set, -2.5)} disabled={finished} aria-label="Минус 2,5 кг">−</button>
                         <button className={`wbtn src-${source} ${weight ? '' : 'empty'}`} data-w={weight ?? ''} onClick={() => onOpenWeight(exerciseIndex, set, weight)} disabled={finished} aria-label={`Вес подхода ${set}`}>{weight ? formatWeight(weight) : '—'}{weight ? <small>кг</small> : null}</button>
                         <button className="st" onClick={() => stepWeight(exerciseIndex, set, 2.5)} disabled={finished} aria-label="Плюс 2,5 кг">+</button>
-                        <input className={`reps ${reps !== null && reps !== undefined && reps >= exercise.max ? 'hi' : reps !== null && reps !== undefined && reps > 0 && reps < exercise.min ? 'lo' : ''}`} inputMode="numeric" autoComplete="off" placeholder={`${exercise.min}–${exercise.max}`} value={reps ?? ''} onChange={(event) => updateReps(exerciseIndex, set, event.target.value)} disabled={finished} aria-label={`Повторения подхода ${set}`} />
+                        <input
+                          className={`reps ${reps !== null && reps !== undefined && reps >= exercise.max ? 'hi' : reps !== null && reps !== undefined && reps > 0 && reps < exercise.min ? 'lo' : ''}`}
+                          inputMode="numeric"
+                          autoComplete="off"
+                          placeholder={`${exercise.min}–${exercise.max}`}
+                          value={reps ?? ''}
+                          onChange={(event) => updateReps(exerciseIndex, set, event.target.value)}
+                          onFocus={(event) => keepFieldVisible(event.currentTarget)}
+                          disabled={finished}
+                          aria-label={`Повторения подхода ${set}`}
+                        />
                       </li>
                     );
                   })}
