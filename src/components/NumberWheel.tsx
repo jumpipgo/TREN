@@ -212,6 +212,8 @@ export function NumberWheelField({
 interface WheelStepperProps extends Omit<NumberWheelFieldProps, 'id' | 'children'> {
   decreaseLabel?: string;
   increaseLabel?: string;
+  /** Единица измерения рядом со значением, например «кг». */
+  unit?: string;
 }
 
 /**
@@ -234,6 +236,7 @@ export function WheelStepper({
   onFirstDrag,
   decreaseLabel = 'Уменьшить',
   increaseLabel = 'Увеличить',
+  unit,
 }: WheelStepperProps) {
   const [dragging, setDragging] = useState(false);
   const current = value ?? min;
@@ -278,6 +281,7 @@ export function WheelStepper({
       <button type="button" className="step-btn" onPointerDown={(event) => event.stopPropagation()} onClick={bump(-step)} aria-label={decreaseLabel} tabIndex={-1} disabled={current <= min}>−</button>
       <span className="step-val">
         <span className="wheel-val">{value != null ? format(value) : (placeholder ?? `${min}–${max}`)}</span>
+        {value != null && unit && <small className="step-unit">{unit}</small>}
         {dragging && (
           <i className="step-drag" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"><path d="M12 19V6M6 12l6-6 6 6" /></svg>
